@@ -29,7 +29,7 @@ function clearLog(event) {
  o.innerHTML = "";
 }
 
-function update_background(ev) {
+function update_touch(ev) {
  // Change background color based on the number simultaneous touches
  // in the event's targetTouches list:
  //   yellow - one tap (or hold)
@@ -38,15 +38,17 @@ function update_background(ev) {
  switch (ev.targetTouches.length) {
    case 1:
      // Single tap`
-     ev.target.style.background = "yellow";
+     ev.target.style.opacity = "1";
      break;
    case 2:
      // Two simultaneous touches
-     ev.target.style.background = "pink";
+     ev.target.style.opacity = "1";
+     ev.target.style.filter = "blur(0)";
      break;
    default:
      // More than two simultaneous touches
-     ev.target.style.background = "lightblue";
+     ev.target.style.opacity = "1";
+     ev.target.style.filter = "blur(0) greyscale(0%)";
  }
 }
 
@@ -93,7 +95,7 @@ function start_handler(ev) {
    }
  }
  if (logEvents) log("touchStart", ev, true);
- update_background(ev);
+ update_touch(ev);
 }
 
 function move_handler(ev) {
@@ -109,7 +111,8 @@ function move_handler(ev) {
  // To avoid too much color flashing many touchmove events are started,
  // don't update the background if two touch points are active
  if (!(ev.touches.length == 2 && ev.targetTouches.length == 2))
-   update_background(ev);
+   update_touch(ev);
+   console.log(ev)
 
  // Set the target element's outline to dashed to give a clear visual
  // indication the element received a move event.
@@ -124,7 +127,7 @@ function end_handler(ev) {
   if (logEvents) log(ev.type, ev, false);
   if (ev.targetTouches.length == 0) {
     // Restore background and outline to original values
-    ev.target.style.background = "white";
+    ev.target.style.opacity = "0.25";
     ev.target.style.outline = "1px solid black";
   }
 }
@@ -144,4 +147,5 @@ function init() {
  set_handlers("target2");
  set_handlers("target3");
  set_handlers("target4");
+ set_handlers("target5");
 }

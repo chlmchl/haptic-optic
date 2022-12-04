@@ -15,10 +15,16 @@
         
         <h1>Multi-touch interaction</h1>
         <!-- Create some boxes to test various gestures. -->
-        <ol>
-            <li><a href="test1.html">Test 1</a></li>
-            <li><a href="test2/test2.html">Test 2</a></li>
-        </ol>
+        <img id="target1" class="draggable" src="img/img1.jpg"/>
+        <img id="target2" class="draggable" src="img/img2.png"/>
+        <img id="target3" class="draggable" src="img/img3.png"/>
+        <img id="target4" class="draggable" src="img/img4.jpg"/>
+        <img id="target5" class="draggable" src="img/img5.jpeg"/>
+            
+        <!-- UI for logging/debugging -->
+        <button id="log" onclick="enableLog(event);">Start/Stop event logging</button>
+        <button id="clearlog" onclick="clearLog(event);">Clear the log</button>
+
         <p></p>
         <output></output>
         <script src="script.js" async defer></script>
