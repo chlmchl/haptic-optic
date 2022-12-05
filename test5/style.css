@@ -1,0 +1,14 @@
+div {
+    margin: 0em;
+    padding: 2em;
+  }
+  
+  #target1, #target2, #target3, #target4, #target5 {
+    background: white;
+    width: 150px;
+    border: 1px solid black;
+    opacity: 0.5;
+    filter: blur(5px) grayscale(90%);
+
+  }
+
