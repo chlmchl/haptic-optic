@@ -37,3 +37,10 @@ div {
 .credits {
   display: none;
 }
+
+h1{
+  font-family: Tahoma, sans-serif;
+  font-size: 48px;
+  width: 100%;
+  text-align: center;
+}

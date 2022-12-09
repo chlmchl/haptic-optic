@@ -7,8 +7,10 @@ let allNamesElm = document.getElementById("allNames")
 	allNamesElm.style.display = "none"
 	errorMessageElm.style.display = "block"
 	}
+
+	
 			
-	fetch("https://api.apispreadsheets.com/data/3MLkUCmBGyQFJqYz/").then(res=>{
+	fetch("https://sheets.googleapis.com/v4/spreadsheets/1WtwrA3Bou1MluhOmcEFiJSNBVFt5aq_1821tFXLiehI/values/index?key=AIzaSyDhlpOIwLeSZUTfp1OUPRagso6CMgbMzOA").then(res=>{
 		if (res.status === 200){
 			//console.log(res.json())
 			res.json().then(data=>{
@@ -26,7 +28,16 @@ let allNamesElm = document.getElementById("allNames")
 					let rowImage = document.createElement("img")
 			    	let rowImageNode = document.createTextNode(rowInfo["IMAGE"])
 					console.log(rowImageNode)
-			    	rowImage.src = "../img/" + rowImageNode.nodeValue;
+			    	rowImage.src = "../img/" + rowImageNode.nodeValue
+					//Randomize size and position of images 
+					const x = Math.random() * window.innerWidth
+  					const y = Math.random() * window.innerHeight
+  					rowImage.style.position = 'absolute'
+  					rowImage.width = 50 + Math.random() * 300
+					rowImage.style.left = x + 'px'
+					rowImage.style.top = y + 'px'
+					//rowImage.style.opacity = Math.random(0.1, 1)
+					//rowImage.style.filter = "blur(" + Math.random(1, 15) +"px)"
 			    	rowImage.classList.add("image")
 					
 				    let rowWritten = document.createElement("p")
