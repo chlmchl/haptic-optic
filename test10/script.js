@@ -31,7 +31,7 @@ function get_data_array() {
         console.log(rowImageNode)
         rowImage.src = "../img/" + rowImageNode.nodeValue
         //Randomize size and position of images 
-
+        rowImage.style.transformOrigin = "center center"
         
         rowImage.width = 70 + Math.random() * 300
         

@@ -1,5 +1,6 @@
 body{
   overflow: hidden;
+  transform: perspective(600px);
 }
 
 header {
