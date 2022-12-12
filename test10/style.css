@@ -15,10 +15,7 @@ header {
   justify-content: center;
   align-items: center;
   z-index: 10;
-  transition-property: opacity;
-  transition-delay: 5s;
-  transition-duration: 3s;
-  opacity: 0;
+
   pointer-events: none;
 }
 
@@ -132,7 +129,7 @@ h1:hover, h2:hover {
 }
 
 .image {
-  transition-property: scale, filter, opacity;
+  transition-property: scale, filter, opacity, z-index;
   transition-duration: 3s;
   transition-timing-function: ease-out; 
 }
@@ -140,6 +137,7 @@ h1:hover, h2:hover {
   scale: 1.2;
   filter: blur(0px) !important;
   opacity: 0.8!important;
+  z-index: 10;
 }
 
 
