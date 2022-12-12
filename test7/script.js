@@ -10,6 +10,7 @@ const imageUrls = [
   // Get a reference to the body element
 const body = document.querySelector('body');
 
+
 // Create an image element for each image URL
 const images = imageUrls.map(url => {
   const img = document.createElement('img');

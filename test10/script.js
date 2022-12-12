@@ -1,6 +1,7 @@
 let allNamesElm = document.getElementById("allNames")
 let errorMessageElm = document.getElementById("errorMessage")
-	
+let images = []
+
 function setErrorDisplay(){
 	allNamesElm.style.display = "none"
 	errorMessageElm.style.display = "block"
@@ -17,28 +18,33 @@ function get_data_array() {
         let rowInfo = data_array[i]
         let rowInfoDiv = document.createElement("div")
         rowInfoDiv.classList.add("name-row")
-
-        let rowName = document.createElement("h4")
-        let rowNameNode = document.createTextNode(rowInfo[2])
-        rowName.appendChild(rowNameNode)
-        rowName.classList.add("title")
+        const x = Math.random() * (window.innerWidth)
+        const y = Math.random() * (window.innerHeight)
+        rowInfoDiv.style.position = 'absolute'
+        rowInfoDiv.style.left = x + 'px'
+        rowInfoDiv.style.top = y + 'px'
+        const tFloat = 10 + Math.random() * 50
+        rowInfoDiv.style.animation = `float ${tFloat}s linear alternate infinite`
 
         let rowImage = document.createElement("img")
         let rowImageNode = document.createTextNode(rowInfo[5])
         console.log(rowImageNode)
         rowImage.src = "../img/" + rowImageNode.nodeValue
         //Randomize size and position of images 
-        const x = Math.random() * (window.innerWidth*2)
-        const y = Math.random() * (window.innerHeight*5)
-        rowImage.style.position = 'absolute'
-        rowImage.width = 50 + Math.random() * 300
-        rowImage.style.left = x + 'px'
-        rowImage.style.top = y + 'px'
+
+        
+        rowImage.width = 70 + Math.random() * 300
+        
+        const time = 10 + Math.random() * 10
+        rowImage.style.animation = `blur ${time}s ease alternate infinite`
         //rowImage.style.opacity = Math.random(0.1, 1)
         //rowImage.style.filter = "blur(" + Math.random(1, 15) +"px)"
         rowImage.classList.add("image")
 
-        
+        let rowName = document.createElement("h4")
+        let rowNameNode = document.createTextNode(rowInfo[2])
+        rowName.appendChild(rowNameNode)
+        rowName.classList.add("title")
 
         let rowWritten = document.createElement("p")
         let rowWrittenNode = document.createTextNode(rowInfo[3])
@@ -50,8 +56,8 @@ function get_data_array() {
         rowAudio.appendChild(rowAudioNode)
         rowAudio.classList.add("credits")
 
-        rowInfoDiv.appendChild(rowName)
         rowInfoDiv.appendChild(rowImage)
+        rowInfoDiv.appendChild(rowName)
         rowInfoDiv.appendChild(rowWritten)
         rowInfoDiv.appendChild(rowAudio)
 
