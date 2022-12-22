@@ -18,24 +18,25 @@ function get_data_array() {
         let rowInfo = data_array[i]
         let rowInfoDiv = document.createElement("div")
         rowInfoDiv.classList.add("name-row")
-        const x = Math.random() * (window.innerWidth)
-        const y = Math.random() * (window.innerHeight)
+        const x = -window.innerWidth + Math.random() * (window.innerWidth*2)
+        const y = -window.innerHeight + Math.random() * (window.innerHeight *4)
+        const z = Math.random() * 1500
         rowInfoDiv.style.position = 'absolute'
         rowInfoDiv.style.left = x + 'px'
         rowInfoDiv.style.top = y + 'px'
-        const tFloat = 10 + Math.random() * 50
-        rowInfoDiv.style.animation = `float ${tFloat}s linear alternate infinite`
-
+        rowInfoDiv.style.transform = `translateZ(${z}px)`
+        const tFloat = 30 + Math.random() * 120
+        rowInfoDiv.style.animation = `float ${tFloat}s ease-out alternate infinite`
         let rowImage = document.createElement("img")
         let rowImageNode = document.createTextNode(rowInfo[5])
         console.log(rowImageNode)
         rowImage.src = "../img/" + rowImageNode.nodeValue
         //Randomize size and position of images 
-        rowImage.style.transformOrigin = "center center"
         
-        rowImage.width = 70 + Math.random() * 300
         
-        const time = 10 + Math.random() * 10
+        rowImage.width = 75 + Math.random() * 250
+        
+        const time = 20 + Math.random() * 20
         rowImage.style.animation = `blur ${time}s ease alternate infinite`
         //rowImage.style.opacity = Math.random(0.1, 1)
         //rowImage.style.filter = "blur(" + Math.random(1, 15) +"px)"

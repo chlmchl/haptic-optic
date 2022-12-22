@@ -1,6 +1,6 @@
-body{
-  overflow: hidden;
-  transform: perspective(600px);
+body {
+  overflow-x: scroll;
+  perspective: 2000cm;
 }
 
 header {
@@ -114,17 +114,17 @@ h1:hover, h2:hover {
 @keyframes float {
   from{
     transform:  rotate(0deg)
-                translateX(-40px)
-                translateY(20px)
-                translateZ(-40px)
+                translateX(-100px)
+                translateY(200px)
+                translateZ(-100px) perspective(2000px)
                 rotate(0deg);
   }
   to {
-    transform:  rotate(10deg)
+    transform:  rotate(20deg)
                 translateX(50px)
-                translateY(60px)
-                translateZ(-40px)
-                rotate(-10deg);
+                translateY(30px)
+                translateZ(0px) perspective(2000px)
+                rotate(-20deg);
 
   }
 }
