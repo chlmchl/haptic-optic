@@ -70,7 +70,7 @@ import * as THREE from 'three';
                 document.body.appendChild( container );
 
 				const aspect = window.innerWidth / window.innerHeight;
-				camera = new THREE.PerspectiveCamera( 60, aspect, 60, 1500 );
+				camera = new THREE.PerspectiveCamera( 60, aspect, 1, 1500 );
 				camera.position.z = 200
 
 				// world
@@ -183,7 +183,7 @@ import * as THREE from 'three';
                 //console.log('click')
 				event.preventDefault();
 				TitleFade();
-				
+
 				if ( enableSelection === true ) {
 
 					const draggableObjects = dragControls.getObjects();
