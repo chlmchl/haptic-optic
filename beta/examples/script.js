@@ -30,18 +30,18 @@ import * as THREE from 'three';
 
             const params = {
                 enable: true,
-				exposure: 0.5,
-				bloomStrength: 0.9,
-				bloomThreshold: 0.9,
+				exposure: 0,
+				bloomStrength: 0.15,
+				bloomThreshold: 0.65,
 				bloomRadius: 0
             };
 			const fogParams = {
                 fogNearColor: 0xffffff,
                 fogHorizonColor: 0xffffff,
-                fogDensity: 0.0020,
+                fogDensity: 0.0009,
                 fogNoiseSpeed: 50,
-                fogNoiseFreq: .0012,
-                fogNoiseImpact: .6
+                fogNoiseFreq: .00012,
+                fogNoiseImpact: .3
             }
             let data;
             let dataArr;
@@ -92,8 +92,8 @@ import * as THREE from 'three';
                         const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height);
                         const material = new THREE.MeshBasicMaterial( { map: texture } );
                         const mesh = new THREE.Mesh( geometry, material );
-                        mesh.position.x = ( Math.random() - 0.5 ) * 1200;
-					    mesh.position.y = ( Math.random() - 0.5 ) * 1000;
+                        mesh.position.x = ( Math.random() - 0.5 ) * window.innerWidth * 2;
+					    mesh.position.y = ( Math.random() - 0.5 ) * window.innerHeight * 2;
 					    mesh.position.z = 100 + ( Math.random() - 0.5 ) * 1000;
 
                         if(texture.image.width > 1500) {
@@ -144,7 +144,7 @@ import * as THREE from 'three';
 				bloomPass.threshold = params.bloomThreshold;
 				bloomPass.strength = params.bloomStrength;
 				bloomPass.radius = params.bloomRadius;
-				bloomPass.exposure = params.bloomRadius;
+				bloomPass.exposure = params.exposure;
 				composer.addPass( bloomPass )
 
 				if ( typeof TESTING !== 'undefined' ) {
