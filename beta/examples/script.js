@@ -182,7 +182,8 @@ import * as THREE from 'three';
             function onClick( event ) {
                 //console.log('click')
 				event.preventDefault();
-
+				TitleFade();
+				
 				if ( enableSelection === true ) {
 
 					const draggableObjects = dragControls.getObjects();
