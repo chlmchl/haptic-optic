@@ -1,7 +1,9 @@
 let images = []
-let credits = []
+let titles = []
 let date = []
 let author = []
+
+let credits = []
 
 class GetData {
     GetDataArray() {
@@ -12,18 +14,25 @@ class GetData {
         //console.log(data_array)
 
         for (let i = 1; i < data_array.length; i++) {
+            let items = []
             let rowInfo = data_array[i]
             let rowImageNode = document.createTextNode(rowInfo[5])
             let rowImage = "./img/" + rowImageNode.nodeValue
-            images.push(rowImage)
+            items.push(rowImage)
 
             
+            //titles
+            let rowTitleNode = document.createTextNode(rowInfo[2])
+            let rowTitle = rowTitleNode.nodeValue
+            items.push(rowTitle)
 
-            // let rowNameNode = document.createTextNode(rowInfo[2])
-            // title.push()
-            // let rowWrittenNode = document.createTextNode(rowInfo[3])
+            //credits 
+            let rowAuthorNode = document.createTextNode(rowInfo[0] + " " + rowInfo[1])
+            let rowAuthor = rowAuthorNode.nodeValue
+            items.push(rowAuthor)
 
             // let rowAudioNode = document.createTextNode(rowInfo[7])
+            credits.push(items)
         
         }
         
@@ -32,8 +41,8 @@ class GetData {
     };
     xhttp.open("GET", "https://sheets.googleapis.com/v4/spreadsheets/1WtwrA3Bou1MluhOmcEFiJSNBVFt5aq_1821tFXLiehI/values/index?key=AIzaSyDhlpOIwLeSZUTfp1OUPRagso6CMgbMzOA");
     xhttp.send();
-    console.log(images);
-    return images;
+    //console.log(credits);
+    return credits;
     
     }
 }

@@ -15,6 +15,8 @@ import * as THREE from 'three';
             
             import { GetData } from 'data/addons/get_data.js';
             import { TextureLoader } from 'three';
+			import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+			import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
             let container, stats;
 			let camera, scene;
@@ -62,6 +64,7 @@ import * as THREE from 'three';
 
             function getData() {
                 data = new GetData()
+				//console.log(data)
                 dataArr = data.GetDataArray();
             }
 
@@ -84,18 +87,34 @@ import * as THREE from 'three';
 
 				for ( let i = 1; i < dataArr.length; i ++ ) {
                     
-                    
-
                     const texture = new TextureLoader();
-                    
-                    texture.load(dataArr[i], function (texture) {
+					const font = new FontLoader();
+
+					font.load( 'fonts/helvetiker_regular.typeface.json', function (font) {
+							const geometry = new TextGeometry(dataArr[i][2], {
+								font: font,
+								size: 12,
+								height: 0,
+								curveSegments: 12,
+								bevelEnabled: false,
+								bevelThickness: 0,
+								bevelSize: 0,
+								bevelOffset: 0,
+								bevelSegments: 0
+							} );
+							const material = new THREE.MeshBasicMaterial( { color: 0x000 } );
+							const fontMesh = new THREE.Mesh( geometry, material );
+					} );
+
+                    texture.load(dataArr[i][0], function (texture) {
                         const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height);
                         const material = new THREE.MeshBasicMaterial( { map: texture } );
                         const mesh = new THREE.Mesh( geometry, material );
+	
                         mesh.position.x = ( Math.random() - 0.5 ) * window.innerWidth * 2;
 					    mesh.position.y = ( Math.random() - 0.5 ) * window.innerHeight * 2;
 					    mesh.position.z = 100 + ( Math.random() - 0.5 ) * 1000;
-
+						
                         if(texture.image.width > 1500) {
                             mesh.scale.x = mesh.scale.y = mesh.scale.z = 0.045 + Math.random() * 0.02;
                         } else {
@@ -103,7 +122,27 @@ import * as THREE from 'three';
                         } 
 					    scene.add( mesh );
                         objects.push( mesh );
-                        
+
+						font.load( 'fonts/helvetiker_regular.typeface.json', function (font) {
+							
+							const credits = dataArr[i][2] + ", " + dataArr[i][1];
+							const geometry = new TextGeometry(credits, {
+								font: font,
+								size: 36,
+								height: 5,
+								curveSegments: 12,
+								bevelEnabled: false,
+								bevelThickness: 0,
+								bevelSize: 0,
+								bevelOffset: 0,
+								bevelSegments: 0
+							} );
+							const material = new THREE.MeshBasicMaterial( { color: 0x000 } );
+							const fontMesh = new THREE.Mesh( geometry, material );
+							fontMesh.position.set(-texture.image.width/2, (-texture.image.height/2)-75, 10)
+							mesh.add(fontMesh);
+						} );
+                
                     });
                     //texture.matrixAutoUpdate = false;
 					
