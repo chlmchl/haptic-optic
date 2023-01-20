@@ -18,6 +18,8 @@ import * as THREE from 'three';
 			import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 			import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
+			
+
             let container, stats;
 			let camera, scene;
             let renderer, composer, renderPass, bloomPass;
@@ -40,7 +42,7 @@ import * as THREE from 'three';
 			const fogParams = {
                 fogNearColor: 0xffffff,
                 fogHorizonColor: 0xffffff,
-                fogDensity: 0.0009,
+                fogDensity: 0.001,
                 fogNoiseSpeed: 50,
                 fogNoiseFreq: .00012,
                 fogNoiseImpact: .3
@@ -83,7 +85,15 @@ import * as THREE from 'three';
                 //console.log(dataArr)
                 group = new THREE.Group();
                 scene.add( group );
-                // Data 
+
+				 // renderer
+
+				 renderer = new THREE.WebGLRenderer( { antialias: true } );
+				 renderer.setPixelRatio( window.devicePixelRatio );
+				 renderer.setSize( window.innerWidth, window.innerHeight );
+				 document.body.appendChild( renderer.domElement );
+                
+				 // Data 
 
 				for ( let i = 1; i < dataArr.length; i ++ ) {
                     
@@ -107,13 +117,23 @@ import * as THREE from 'three';
 					} );
 
                     texture.load(dataArr[i][0], function (texture) {
-                        const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height);
-                        const material = new THREE.MeshBasicMaterial( { map: texture } );
+                        const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height, 30, 30);
+						const texture1 = new THREE.MeshBasicMaterial({ map: texture });
+						const uniforms = { texture1: { value: texture }};
+
+						const material = new THREE.ShaderMaterial( { 
+							uniforms: uniforms,
+							vertexShader: document.getElementById('vertexShader').textContent,
+							fragmentShader: document.getElementById('fragmentShader').textContent,
+							wireframe: false } );
+							
                         const mesh = new THREE.Mesh( geometry, material );
 	
                         mesh.position.x = ( Math.random() - 0.5 ) * window.innerWidth * 2;
 					    mesh.position.y = ( Math.random() - 0.5 ) * window.innerHeight * 2;
 					    mesh.position.z = 100 + ( Math.random() - 0.5 ) * 1000;
+						
+						
 						
                         if(texture.image.width > 1500) {
                             mesh.scale.x = mesh.scale.y = mesh.scale.z = 0.045 + Math.random() * 0.02;
@@ -121,6 +141,7 @@ import * as THREE from 'three';
 					        mesh.scale.x = mesh.scale.y = mesh.scale.z = 0.065 + Math.random() * 0.02;
                         } 
 					    scene.add( mesh );
+						
                         objects.push( mesh );
 
 						font.load( 'fonts/helvetiker_regular.typeface.json', function (font) {
@@ -156,13 +177,6 @@ import * as THREE from 'three';
 				scene.fog = new THREE.FogExp2(fogParams.fogHorizonColor, fogParams.fogDensity);
 
                 
-				
-                // renderer
-
-				renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				document.body.appendChild( renderer.domElement );
 
 				stats = new Stats();
 				document.body.appendChild( stats.dom );
@@ -206,7 +220,7 @@ import * as THREE from 'three';
 
 			}
 
-        
+			
 
             function onKeyDown( event ) {
 
@@ -307,7 +321,31 @@ import * as THREE from 'three';
 				composer.setSize( window.innerWidth, window.innerHeight );
 				//controls.handleResize();
 			}
-
+			
+			function updateBlob(geometry) {
+				const time = 0.00025 * Date.now();
+				const vertices = geometry.vertices;
+				
+				let vertex, distance;
+			  
+				for(let vIndex = 0; vIndex < vertices.length; vIndex++) {
+				  vertex = vertices[vIndex];
+			  
+				  distance = 30 + 3 * noise.noise(
+					(0.14 * vertex.x) + (5 * time),
+					(0.14 * vertex.y) + (3 * time),
+					(0.14 * vertex.z) + (1 * time)
+				  );
+			  
+				  vertex.normalize().multiplyScalar(distance);
+				}
+			  
+				geometry.computeVertexNormals();
+				geometry.computeFaceNormals();
+				geometry.verticesNeedUpdate = true;
+				geometry.normalsNeedUpdate = true;
+			  }
+			  
 			function animate() {
 				const time = Date.now() * 0.00005;
 				for ( let i = 1, l = scene.children.length; i < l; i ++ ) {
@@ -341,6 +379,9 @@ import * as THREE from 'three';
 				} else {
 					renderer.render( scene, camera );
 				}
+
+				
+
 
 			}
 

@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/chlmchl/themissingsense/issues"
   },
-  "homepage": "https://github.com/chlmchl/themissingsense#readme"
+  "homepage": "https://github.com/chlmchl/themissingsense#readme",
+  "dependencies": {
+    "glsl-noise": "^0.0.0",
+    "glslify": "^7.1.1"
+  }
 }
