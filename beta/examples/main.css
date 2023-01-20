@@ -1,8 +1,19 @@
+@font-face {
+	font-family: "Format_1452";
+	src: local("Format_1452"),
+		url("fonts/Format/Format_1452.otf") format("opentype"),
+		url("fonts/Format/Format_1452.eot") format("eot"),
+		url("fonts/Format/Format_1452.woff") format("woff"),
+		url("fonts/Format/Format_1452.woff2") format("woff2");
+}
+
+
+
 body {
 	margin: 0;
 	background-color: #000;
 	color: #fff;
-	font-family: Monospace;
+	font-family: 'Format_1452';
 	font-size: 13px;
 	line-height: 24px;
 	overscroll-behavior: none;
@@ -98,7 +109,7 @@ header {
   }
 
 h1{
-	font-family: 'Homemade Apple', cursive;
+	font-family: 'Format_1452';
 	font-size: 36px;
 	line-height: 0.8em;
 	width: 100%;
@@ -107,10 +118,12 @@ h1{
 	}
 	
 	h2 {
-	  font-family: Arial, Helvetica, sans-serif;
+	  font-family: 'Format_1452', Helvetica, sans-serif;
 	  font-size: 12px;
 	  font-weight: 100;
 	  animation: txtBlur 15s ease infinite;
+	  text-align: center;
+	  line-height: 1.3em;
 	} 
 	
 	@keyframes txtBlur {
