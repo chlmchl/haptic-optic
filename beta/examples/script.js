@@ -162,7 +162,7 @@ import * as THREE from 'three';
 							const fontMesh = new THREE.Mesh( geometry, material );
 							fontMesh.position.set(-texture.image.width/2, (-texture.image.height/2)-75, 10)
 							mesh.add(fontMesh);
-							fontMesh.visible = false;
+							fontMesh.visible = true;
 						
 						} );
                 
