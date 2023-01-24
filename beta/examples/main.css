@@ -1,23 +1,25 @@
 @font-face {
-	font-family: "Format_1452";
-	src: local("Format_1452"),
-		url("fonts/Format/Format_1452.otf") format("opentype"),
-		url("fonts/Format/Format_1452.eot") format("eot"),
-		url("fonts/Format/Format_1452.woff") format("woff"),
-		url("fonts/Format/Format_1452.woff2") format("woff2");
+	font-family: "Grotesk_Bold";
+	src: local("Grotesk_Bold"),
+		url("fonts/Format/Grotesk-04Gras.woff") format("woff"),
+		url("fonts/Format/Grotesk-04Gras.woff2") format("woff2")
 }
 
-
+html {
+	/* background-color: #EFEFEF; */
+}
 
 body {
 	margin: 0;
-	background-color: #000;
+	/* background-color: #EFEFEF; */
 	color: #fff;
-	font-family: 'Format_1452';
+	font-family: 'Grotesk_Bold';
 	font-size: 13px;
 	line-height: 24px;
 	overscroll-behavior: none;
 }
+
+
 
 a {
 	color: #ff0;
@@ -109,23 +111,31 @@ header {
   }
 
 h1{
-	font-family: 'Format_1452';
-	font-size: 36px;
+	font-family: 'Grotesk_Bold';
+	font-weight: bolder;
+	font-size: 76px;
 	line-height: 0.8em;
 	width: 100%;
+	color: black;
 	text-align: center;
 	animation: txtBlur 10s ease infinite;
+	mix-blend-mode: difference;
 	}
 	
-	h2 {
-	  font-family: 'Format_1452', Helvetica, sans-serif;
-	  font-size: 12px;
-	  font-weight: 100;
-	  animation: txtBlur 15s ease infinite;
-	  text-align: center;
-	  line-height: 1.3em;
-	} 
-	
+h2 {
+	font-family: 'Grotesk_Bold', Helvetica, sans-serif;
+	font-size: 48px;
+	font-weight: 100;
+	color: black;
+	animation: txtBlur 15s ease infinite;
+	text-align: center;
+	line-height: 1.6em;
+	mix-blend-mode: difference;
+} 
+
+.canvas {
+	background-color: white;
+}
 	@keyframes txtBlur {
 	  0% {
 		filter: blur(0);
@@ -165,3 +175,9 @@ h1{
 		
 	  }
 	}
+
+	@media only screen and (max-width: 600px) {
+		h1 {
+			font-size: 28px;
+		}
+	  }
