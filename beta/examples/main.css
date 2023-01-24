@@ -6,7 +6,7 @@
 }
 
 html {
-	/* background-color: #EFEFEF; */
+	background-color: #EFEFEF;
 }
 
 body {
@@ -133,7 +133,7 @@ h2 {
 	mix-blend-mode: difference;
 } 
 
-.canvas {
+#webgl {
 	background-color: white;
 }
 	@keyframes txtBlur {
