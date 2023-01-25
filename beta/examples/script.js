@@ -78,7 +78,7 @@ export function init () {
   const aspect = window.innerWidth / window.innerHeight
 
   camera = new THREE.PerspectiveCamera(60, aspect, 1, 4000)
-  camera.position.z = 200
+  camera.position.z = 400
 
   scene = new THREE.Scene()
   scene.add(camera)
@@ -396,9 +396,9 @@ export function animate () {
   const time = Date.now() * 0.0005
 
   for (let i = 1, l = objects.length; i < l; i++) {
-    objects[i][0].position.y += Math.sin(i / 20 + time) * 0.02
-    objects[i][0].position.x += Math.sin(i / 30 + time) * 0.02
-    objects[i][0].position.z += Math.sin(i / 35 + time) * 0.02
+    objects[i][0].position.y += Math.sin(i / 20 + time) * 0.06
+    objects[i][0].position.x += Math.sin(i / 30 + time) * 0.06
+    objects[i][0].position.z += Math.sin(i / 35 + time) * 0.06
   }
 
   setTimeout(() => {

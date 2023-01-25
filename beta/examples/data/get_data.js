@@ -12,7 +12,7 @@ export class GetData {
                 let items = []
                 let rowInfo = data_array[i]
                 let rowImageNode = document.createTextNode(rowInfo[5])
-                let rowImage = "./img/" + rowImageNode.nodeValue
+                let rowImage = "./img/" + rowImageNode.nodeValue 
                 items.push(rowImage)
                 
                 //titles
