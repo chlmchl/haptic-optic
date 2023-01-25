@@ -44,6 +44,7 @@ function loadTitle (scene, render, camera) {
       text.renderOrder = 999
       text.material.depthTest = false
       text.material.depthWrite = false
+      text.visible = true
       //objects.push ( text );
 
       // text.position.x = centerOffset;
@@ -53,8 +54,6 @@ function loadTitle (scene, render, camera) {
       // text.rotation.x = 0;
       // text.rotation.y = Math.PI * 2;
     }
-
-    render()
   }) //end load function
 }
 

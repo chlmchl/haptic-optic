@@ -38,7 +38,7 @@ export class GetData {
     };
     xhttp.open("GET", "https://sheets.googleapis.com/v4/spreadsheets/1WtwrA3Bou1MluhOmcEFiJSNBVFt5aq_1821tFXLiehI/values/index?key=AIzaSyDhlpOIwLeSZUTfp1OUPRagso6CMgbMzOA");
     xhttp.send();
-    //console.log(credits);
+    // console.log(credits);
     return credits;
     
     }
