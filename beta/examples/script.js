@@ -78,7 +78,7 @@ export function init () {
   const aspect = window.innerWidth / window.innerHeight
 
   camera = new THREE.PerspectiveCamera(60, aspect, 1, 4000)
-  camera.position.z = 400
+  camera.position.z = 600
 
   scene = new THREE.Scene()
   scene.add(camera)
@@ -147,7 +147,7 @@ export function init () {
 
   const message1 = [
     [')) HAPTIC )( OPTIC ((', 20],
-    ['Collection touching my soul', 13]
+    ['Touching Collection', 13]
   ]
 
   const message2 = [
@@ -279,8 +279,8 @@ export function loadData (scene, render, camera, dataArr) {
       geometry.computeBoundingBox()
       const mesh = new THREE.Mesh(geometry, material)
 
-      mesh.position.x = (Math.random() - 0.5) * window.innerWidth * 5
-      mesh.position.y = (Math.random() - 0.5) * window.innerHeight * 5
+      mesh.position.x = (Math.random() - 0.5) * window.innerWidth * 6
+      mesh.position.y = (Math.random() - 0.5) * window.innerHeight * 6
       mesh.position.z = 100 + (Math.random() - 0.5) * 3000
 
       mesh.scale.x = mesh.scale.y = 0.5
@@ -295,8 +295,8 @@ export function loadData (scene, render, camera, dataArr) {
           dataArr[i][2] + '\n' + dataArr[i][1] + ' \n(' + dataArr[i][3] + ') '
         const geometry = new TextGeometry(credits, {
           font: font,
-          size: 68,
-          height: 0,
+          size: 52,
+          height: 1,
           curveSegments: 12,
           bevelEnabled: false,
           bevelThickness: 0,
@@ -312,19 +312,21 @@ export function loadData (scene, render, camera, dataArr) {
         material.blendSrc = THREE.OneMinusDstColorFactor //default
 
         material.transparent = true
-        // fontMesh.position.set(
-        //   -texture.image.width / 2,
-        //   -texture.image.height / 2,
-        //   150
-        // )
+        //material.blendDstAlpha = 100
+
+        fontMesh.position.set(
+          -texture.image.width / 2 + 100,
+          texture.image.height / 2 - 200,
+          150
+        )
         fontMesh.isMesh = false
         mesh.name = fontMesh.name = 'data[' + i + ']'
         textCredit.push(fontMesh)
 
-        geometry.computeBoundingBox()
-        const xMid =
-          -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
-        geometry.translate(xMid, 0, -500)
+        // geometry.computeBoundingBox()
+        // const xMid =
+        //   -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
+        // geometry.translate(xMid, 0, -500)
         fontMesh.renderOrder = 999
         fontMesh.material.depthTest = false
         fontMesh.material.depthWrite = false
@@ -383,7 +385,7 @@ export function createControls (camera) {
   controls.enableRotate = false
   controls.enablePan = true
   controls.enableZoom = true
-  controls.zoomSpeed = 1
+  controls.zoomSpeed = 0.8
   controls.panSpeed = 1
   controls.enableDamping = true
   controls.dampingFactor = 0.0075
@@ -418,7 +420,7 @@ function test () {
   // calculate objects intersecting the picking ray
   const intersects = camRay.intersectObjects(items, true)
 
-  if (intersects.length > 0 && intersects[0].distance < 800) {
+  if (intersects.length > 0 && 400 < intersects[0].distance && intersects[0].distance < 800) {
     const object = intersects[0].object
     // console.log(intersects[0].distance)
     //console.log(object.name)
