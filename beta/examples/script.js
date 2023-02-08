@@ -15,17 +15,24 @@ import { TextureLoader } from 'three'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 import { onWindowResize } from './utils.js'
-import { AdditiveAnimationBlendMode, MeshBasicMaterial } from '../build/three.module.js'
 
-let container, stats
+let stats
 let camera, scene
-const frustumSize = 250
 
-let renderer, composer, composer2, renderPass, bloomPass
+let renderer, composer, bloomPass
 let controls, dragControls
-let mesh, group
+let mesh, group, groupCredit
+let dummy = new THREE.Object3D()
 let enableSelection = true
 
+let prevCameraX = 0
+let prevCameraY = 0
+let prevCameraZ = 0
+let deltaX = 0
+let deltaY = 0
+let deltaZ = 0
+let count = 0
+let texAlpha
 let clock = new THREE.Clock()
 
 let afterimagePass
@@ -49,36 +56,79 @@ let data
 let dataArr
 let objects = []
 let items = []
+let addCredits = []
 let textCredit = []
-let title = true
-let noTitle = false
+let title = false
 
-let reverse = false
+// variables
+let title1,
+  title2,
+  title3,
+  credit1,
+  credit2,
+  d1,
+  d2,
+  zSpeed,
+  pSpeed,
+  initialWidth,
+  initialDepth,
+  onMobile
 
 const mouse = new THREE.Vector2(),
   raycaster = new THREE.Raycaster()
 
 const camRay = new THREE.Raycaster()
 const ray = new THREE.Vector3()
-let direction = new THREE.Vector3()
-
+getDevice()
 getData()
 
-setTimeout(() => {
-  init()
-  animate()
-}, 800)
-
-export function getData () {
-  data = new GetData()
-  dataArr = data.GetDataArray()
+async function getData () {
+  dataArr = await GetData()
+  console.log(dataArr)
+  setTimeout(() => {
+    init()
+  }, 500)
 }
 
-export function init () {
+function getDevice () {
+  if (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+  ) {
+    // true for mobile device
+    onMobile = true
+    title1 = 9
+    title2 = 7
+    title3 = 6
+    credit1 = 32
+    d1 = 900
+    d2 = 700
+    zSpeed = 0.2
+    pSpeed = 0.5
+    initialWidth = 10
+    initialDepth = 5000
+  } else {
+    // false for not mobile device
+    onMobile = false
+    title1 = 16
+    title2 = 14
+    title3 = 12
+    credit1 = 52
+    d1 = 800
+    d2 = 500
+    zSpeed = 0.5
+    pSpeed = 1
+    initialWidth = 8
+    initialDepth = 4000
+  }
+}
+
+async function init () {
   const aspect = window.innerWidth / window.innerHeight
 
   camera = new THREE.PerspectiveCamera(60, aspect, 1, 4000)
-  camera.position.z = 600
+  camera.position.z = 4000
 
   scene = new THREE.Scene()
   scene.add(camera)
@@ -86,7 +136,7 @@ export function init () {
   ray.x = 0
   ray.y = 0
   ray.z = 0
-  camera.add(ray)
+  // camera.add(ray)
 
   // stats
   stats = new Stats()
@@ -124,12 +174,6 @@ export function init () {
   bloomPass.radius = params.bloomRadius
   composer.addPass(bloomPass)
 
-  if (typeof TESTING !== 'undefined') {
-    for (let i = 0; i < 45; i++) {
-      render()
-    }
-  }
-
   // event listeners
   window.addEventListener('resize', onWindowResize(camera, renderer, composer))
   let portrait = window.matchMedia('(orientation: portrait)')
@@ -146,32 +190,30 @@ export function init () {
   createControls(camera)
 
   const message1 = [
-    [')) HAPTIC )( OPTIC ((', 20],
-    ['Touching Collection', 13]
+    [') HAPTIC )( OPTIC (', title1],
+    ['Touching Collection', title2]
   ]
 
   const message2 = [
-    ['Times of distance', 16],
-    ['2020/2022', 16]
+    ['Times of distance', title2],
+    ['2020/2022', title3]
   ]
 
   let message = message1
-  loadTitle(camera, message, message1, message2, title)
+  loadTitle(camera, message)
 
   setTimeout(() => {
-    message= message2
-    loadTitle(camera, message, message1, message2, title);
-  }, 10000);
-  
-
+    message = message2
+    loadTitle(camera, message)
+    title = false
+  }, 10000)
 
   // launch functions
 
- 
-  loadData(scene, render, camera, dataArr)
+  addInstancedMesh(scene, dataArr)
 }
 
-function loadTitle (camera, message, message1, message2, title) {
+function loadTitle (camera, message) {
   const loader = new FontLoader()
   loader.load('fonts/Grotesk/Grotesk03_Bold.json', function (font) {
     for (let i = 0; i < message.length; i++) {
@@ -204,60 +246,17 @@ function loadTitle (camera, message, message1, message2, title) {
       text.renderOrder = 999
       text.material.depthTest = false
       text.material.depthWrite = false
-      text.isMesh = title
+      text.isMesh = true
       setTimeout(() => {
         text.isMesh = false
-        
-      }, 5000);
+      }, 4000)
     }
   }) //end load function
 }
-setTimeout(() => {
-  function loadTitle (camera, message, message1, message2, title) {
-    const loader = new FontLoader()
-    loader.load('fonts/Grotesk/Grotesk03_Bold.json', function (font) {
-      for (let i = 0; i < message.length; i++) {
-        const geometry = new TextGeometry(message[i][0], {
-          font: font,
-          size: message[i][1],
-          height: 0,
-          curveSegments: 12,
-          bevelEnabled: false,
-          bevelThickness: 0,
-          bevelSize: 0,
-          bevelOffset: 0,
-          bevelSegments: 0
-        })
-        const material = new THREE.MeshBasicMaterial({ color: 0xefefef })
-        const text = new THREE.Mesh(geometry, material)
-
-        material.blending = THREE.CustomBlending
-        material.blendEquation = THREE.AddEquation //default
-        material.blendSrc = THREE.OneMinusDstColorFactor //default
-        material.transparent = true
-
-        geometry.computeBoundingBox()
-        const xMid =
-          -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
-        geometry.translate(xMid, -30 * i, -200)
-
-        camera.add(text)
-
-        text.renderOrder = 999
-        text.material.depthTest = false
-        text.material.depthWrite = false
-        text.isMesh = title
-        setTimeout(() => {
-          text.isMesh = false
-        }, 5000);
-      }
-    }) //end load function
-  }
-}, 5000);
 
 // load and display data
 
-export function loadData (scene, render, camera, dataArr) {
+function addInstancedMesh (scene, dataArr) {
   for (let i = 1; i < dataArr.length; i++) {
     const texture = new TextureLoader()
     /////// DISPLAY IMAGE
@@ -274,15 +273,18 @@ export function loadData (scene, render, camera, dataArr) {
         uniforms: uniforms,
         vertexShader: document.getElementById('vertexShader').textContent,
         fragmentShader: document.getElementById('fragmentShader').textContent,
-        wireframe: false
+        wireframe: false,
+        transparent: true,
+        opacity: 1
       })
       geometry.computeBoundingBox()
+      geometry.needsUpdate = true
       const mesh = new THREE.Mesh(geometry, material)
 
-      mesh.position.x = (Math.random() - 0.5) * window.innerWidth * 6
-      mesh.position.y = (Math.random() - 0.5) * window.innerHeight * 6
-      mesh.position.z = 100 + (Math.random() - 0.5) * 3000
-
+      mesh.position.x = (Math.random() - 0.5) * window.innerWidth * initialWidth
+      mesh.position.y =
+        (Math.random() - 0.5) * window.innerHeight * initialWidth
+      mesh.position.z = 1000 + (Math.random() - 0.5) * initialDepth
       mesh.scale.x = mesh.scale.y = 0.5
 
       scene.add(mesh)
@@ -291,11 +293,26 @@ export function loadData (scene, render, camera, dataArr) {
       const font = new FontLoader()
 
       font.load('fonts/Grotesk/Grotesk03_Bold.json', function (font) {
-        const credits =
+        let credits =
           dataArr[i][2] + '\n' + dataArr[i][1] + ' \n(' + dataArr[i][3] + ') '
+
+        /* break dataArr[i][3] into a new line every 3 words */
+
+        dataArr[i][1] = dataArr[i][1].split(' ')
+        let line = ''
+        for (let j = 0; j < dataArr[i][1].length; j++) {
+          line += dataArr[i][1][j] + ' '
+
+          if (j % 3 === 0 && dataArr[i][1].length > 4) {
+            line += '\n'
+          }
+        }
+        credits = dataArr[i][2] + '\n' + line + ' \n(' + dataArr[i][3] + ') '
+        //console.log(line)
+
         const geometry = new TextGeometry(credits, {
           font: font,
-          size: 52,
+          size: credit1,
           height: 1,
           curveSegments: 12,
           bevelEnabled: false,
@@ -304,30 +321,71 @@ export function loadData (scene, render, camera, dataArr) {
           bevelOffset: 0,
           bevelSegments: 0
         })
-
+        geometry.computeBoundingBox()
         const material = new THREE.MeshBasicMaterial({ color: 0xefefef })
         const fontMesh = new THREE.Mesh(geometry, material)
         material.blending = THREE.CustomBlending
         material.blendEquation = THREE.AddEquation //default
         material.blendSrc = THREE.OneMinusDstColorFactor //default
+        // material.blendDst = THREE.OneMinusDstColorFactor
 
         material.transparent = true
-        //material.blendDstAlpha = 100
-
+        geometry.computeBoundingBox()
         fontMesh.position.set(
-          -texture.image.width / 2 + 100,
-          texture.image.height / 2 - 200,
-          150
+          -texture.image.width / 2 + 50,
+          texture.image.height / 2 - 100,
+          50
         )
-        fontMesh.isMesh = false
-        mesh.name = fontMesh.name = 'data[' + i + ']'
-        textCredit.push(fontMesh)
 
-        // geometry.computeBoundingBox()
+       
+          dataArr[i][4] = dataArr[i][4].split(' ')
+          line = ''
+          for (let j = 0; j < dataArr[i][4].length; j++) {
+            line += dataArr[i][4][j] + ' '
+            
+            if (j % 5 === 0 && dataArr[i][4].length > 4) {
+              line += '\n'
+            }
+          }
+          
+          let hiddenCredits = line
+
+          const geometry2 = new TextGeometry(hiddenCredits, {
+            font: font,
+            size: credit1,
+            height: 1,
+            curveSegments: 12,
+            bevelEnabled: false,
+            bevelThickness: 0,
+            bevelSize: 0,
+            bevelOffset: 0,
+            bevelSegments: 0
+          })
+
+          const creditMesh = new THREE.Mesh(geometry2, material)
+
+          geometry2.computeBoundingBox()
+          creditMesh.isMesh = false
+
+          fontMesh.add(creditMesh)
+
+          creditMesh.position.set(
+            0,
+            fontMesh.geometry.boundingBox.min.y - 60,
+            0
+          )
+        
+
+        fontMesh.isMesh = false
+
+        mesh.name = fontMesh.name = 'data[' + i + ']'
+
+        // addCredits.push(fontMesh)
+        textCredit.push(fontMesh)
         // const xMid =
         //   -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
         // geometry.translate(xMid, 0, -500)
-        fontMesh.renderOrder = 999
+        //fontMesh.renderOrder = 999
         fontMesh.material.depthTest = false
         fontMesh.material.depthWrite = false
 
@@ -341,77 +399,138 @@ export function loadData (scene, render, camera, dataArr) {
   animate()
 }
 
-export function onKeyDown (event) {
+function onKeyDown (event) {
   enableSelection = event.keyCode === 16 ? true : false
 }
 
-export function onKeyUp () {
+function onKeyUp () {
   enableSelection = false
 }
 
-export function onClick (event) {
+function onClick (event) {
   event.preventDefault()
-  title = false
-  if (enableSelection === true) {
-    const draggableObjects = dragControls.getObjects()
-    draggableObjects.length = 0
+  if (title === false) {
+    if (enableSelection === true) {
+      const draggableObjects = dragControls.getObjects()
+      draggableObjects.length = 0
 
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
 
-    raycaster.setFromCamera(mouse, camera)
+      raycaster.setFromCamera(mouse, camera)
 
-    const intersections = raycaster.intersectObjects(items, true)
+      const intersections = raycaster.intersectObjects(items, true)
+      const intersectionsCredits = raycaster.intersectObjects(textCredit, true)
+      camRay.setFromCamera(ray, camera)
 
-    if (intersections.length > 0) {
-      const object = intersections[0].object
+      // calculate objects intersecting the picking ray
+      const intersects = camRay.intersectObjects(items, true)
 
-      scene.attach(object)
+      if (intersections.length > 0) {
+        const object = intersections[0].object
+        object.parent.attach(object)
 
-      dragControls.transformGroup = true
-      draggableObjects.push(group)
-    }
+        dragControls.transformGroup = true
+        draggableObjects.push(group)
 
-    if (group.children.length === 0) {
-      dragControls.transformGroup = false
-      draggableObjects.push(...items)
+        if (onMobile === true) {
+          if (count == 0) {
+            if (intersects.length > 0 && intersects[0].distance < 1500) {
+              object.children[0].isMesh = true
+              object.opacity = 0.5
+              count = 1
+            }
+          } else if (count == 1) {
+            object.children[0].isMesh = true
+            object.children[0].children[0].isMesh = true
+            count = 2
+          } else if (count == 2) {
+            object.children[0].isMesh = false
+            object.children[0].children[0].isMesh = false
+            count = 0
+          }
+        }
+        console.log(count)
+      }
+
+      if (intersectionsCredits.length > 0) {
+        const object = intersectionsCredits[0].object
+        object.children[0].isMesh = !object.children[0].isMesh
+        object.parent.attach(object)
+
+        dragControls.transformGroup = true
+        draggableObjects.push(groupCredit)
+      }
+
+      if (group.children.length === 0) {
+        dragControls.transformGroup = false
+        draggableObjects.push(...items)
+      }
+      // if (groupCredit.children.length === 0) {
+      //   dragControls.transformGroup = false
+      //   draggableObjects.push(...textCredit)
+      // }
     }
   }
-  render()
+  // render()
 }
 
-export function createControls (camera) {
+function createControls (camera) {
   controls = new OrbitControls(camera, renderer.domElement)
   controls.enableRotate = false
   controls.enablePan = true
   controls.enableZoom = true
-  controls.zoomSpeed = 0.8
-  controls.panSpeed = 1
+  controls.zoomSpeed = zSpeed
+  controls.minDistance = 0
+  controls.panSpeed = pSpeed
   controls.enableDamping = true
   controls.dampingFactor = 0.0075
-  controls.keys = ['KeyA', 'KeyS', 'KeyD']
 }
 
 /////// ANIMATE
 
-export function animate () {
-  const time = Date.now() * 0.0005
+function animate () {
+  const time = performance.now() * 0.0005
 
   for (let i = 1, l = objects.length; i < l; i++) {
-    objects[i][0].position.y += Math.sin(i / 20 + time) * 0.06
-    objects[i][0].position.x += Math.sin(i / 30 + time) * 0.06
-    objects[i][0].position.z += Math.sin(i / 35 + time) * 0.06
+    let object = objects[i][0]
+    object.position.y += Math.sin((i + time) / 20) * 0.06
+    object.position.x += Math.sin((i + time) / 30) * 0.06
+    object.position.z += Math.sin((i + time) / 35) * 0.06
   }
-
-  setTimeout(() => {
+  checkCameraPos()
+  if (title === false && onMobile === false) {
     test()
-  }, 100)
+  }
 
   controls.update()
   stats.update()
-  requestAnimationFrame(animate)
 
   render()
+  requestAnimationFrame(animate)
+}
+
+function checkCameraPos () {
+  deltaX += camera.position.x - prevCameraX
+  deltaY += camera.position.y - prevCameraY
+  deltaZ += camera.position.z - prevCameraZ
+
+  prevCameraX = camera.position.x
+  prevCameraY = camera.position.y
+  prevCameraZ = camera.position.z
+
+  if (Math.abs(deltaX) > window.innerWidth) {
+    addObjects()
+    deltaX = 0
+  }
+  if (Math.abs(deltaY) > window.innerHeight * 1.5) {
+    addObjects()
+    deltaY = 0
+  }
+  if (Math.abs(deltaZ) > 5000) {
+    addObjects()
+    deltaZ = 0
+  }
 }
 
 function test () {
@@ -420,10 +539,14 @@ function test () {
   // calculate objects intersecting the picking ray
   const intersects = camRay.intersectObjects(items, true)
 
-  if (intersects.length > 0 && 400 < intersects[0].distance && intersects[0].distance < 800) {
+  if (
+    intersects.length > 0 &&
+    d2 < intersects[0].distance &&
+    intersects[0].distance < d1
+  ) {
     const object = intersects[0].object
     // console.log(intersects[0].distance)
-    //console.log(object.name)
+    //console.log(object.name + object.children[0].name)
     for (let i = 0; i < textCredit.length; i++) {
       if (object.name != textCredit[i].name) {
         textCredit[i].isMesh = false
@@ -435,12 +558,63 @@ function test () {
   } else {
     for (let i = 0; i < textCredit.length; i++) {
       textCredit[i].isMesh = false
+      textCredit[i].children[0].isMesh = false
+    }
+  }
+}
+
+const frustum = new THREE.Frustum()
+const cameraViewProjectionMatrix = new THREE.Matrix4()
+
+// clone the objects and add them to the scene
+function addObjects () {
+  for (var i = 0; i < 15; i++) {
+    const randomObj = Math.floor(Math.random() * objects.length)
+    var clonedObject = objects[randomObj][0].clone()
+    scene.add(clonedObject)
+
+    clonedObject.position.set(
+      camera.position.x + (Math.random() - 0.5) * window.innerWidth * 6,
+      camera.position.y + (Math.random() - 0.5) * window.innerHeight * 2,
+      camera.position.z + (Math.random() - 0.5) * 10000
+    )
+
+    clonedObject.children[0].isMesh = false
+    clonedObject.children[0].children[0].isMesh = false
+    items.push(clonedObject)
+    clonedObject.name = 'clonedData['
+    //get position of the cloned object in the array items
+    const index = items.indexOf(clonedObject)
+    //add the cloned object and its text to the objects array
+    objects.push([clonedObject, clonedObject.children[0]])
+    //set the name of the cloned object and its text to clonedData[index]
+    clonedObject.name = 'clonedData[' + index + ']'
+    clonedObject.children[0].name = 'clonedData[' + index + ']'
+    textCredit.push(clonedObject.children[0])
+  }
+}
+
+function updateFrustumCulling () {
+  cameraViewProjectionMatrix.multiplyMatrices(
+    camera.projectionMatrix,
+    camera.matrixWorldInverse
+  )
+  frustum.setFromProjectionMatrix(cameraViewProjectionMatrix)
+
+  for (let i = 0; i < scene.children.length; i++) {
+    const mesh = scene.children[i]
+    if (mesh.type === 'Mesh') {
+      mesh.visible = frustum.intersectsObject(mesh)
     }
   }
 }
 
 /////// RENDER
-export function render () {
+function render () {
+  updateFrustumCulling()
+  // console.log(
+  //   scene.children.length + ' : ' + scene.children.filter(c => c.visible).length
+  // )
   let deltaTime = clock.getDelta()
 
   controls.update(deltaTime)

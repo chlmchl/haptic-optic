@@ -38,7 +38,6 @@
 
 			void main() {
 				vUv = uv; 
-
 				vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
 				gl_Position = projectionMatrix * modelViewPosition; 
 			}
@@ -54,7 +53,7 @@
 				vec4 color1 = texture2D(texture1, vUv);
 				//gl_FragColor = mix(color1, vec4(1.0, 1.0, 1.0, 1.0), vUv.y);
 				//gl_FragColor = color1;
-				gl_FragColor = ( texture2D( texture1, vUv ) + vec4(0.1, 0.1, 0.1, 1.0) * texture2D( bloomTexture, vUv ) );
+				gl_FragColor = ( texture2D( texture1, vUv ) + vec4(0.1, 0.1, 0.1, 0) * texture2D( bloomTexture, vUv ) );
 
 			}	
 		</script>
