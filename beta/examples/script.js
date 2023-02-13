@@ -104,9 +104,9 @@ function getDevice () {
     credit1 = 32
     d1 = 900
     d2 = 700
-    zSpeed = 0.2
-    pSpeed = 0.5
-    initialWidth = 10
+    zSpeed = 0.1
+    pSpeed = 0.1
+    initialWidth = 12
     initialDepth = 5000
   } else {
     // false for not mobile device
@@ -248,7 +248,14 @@ function loadTitle (camera, message) {
       text.material.depthWrite = false
       text.isMesh = true
       setTimeout(() => {
+        const time = performance.now() * 0.0005
+        for(let i = 0; i < 100; i++) {
+          text.material.opacity = 1 / i
+          console.log(text.material.opacity)
+        }
+        if(text.material.opacity <= 0) {
         text.isMesh = false
+        }
       }, 4000)
     }
   }) //end load function
