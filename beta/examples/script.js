@@ -21,8 +21,7 @@ let camera, scene
 
 let renderer, composer, bloomPass
 let controls, dragControls
-let mesh, group, groupCredit
-let dummy = new THREE.Object3D()
+let group, groupCredit
 let enableSelection = true
 
 let prevCameraX = 0
@@ -31,8 +30,10 @@ let prevCameraZ = 0
 let deltaX = 0
 let deltaY = 0
 let deltaZ = 0
+let newdeltaX = 0
+let newdeltaY = 0
+let newdeltaZ = 0
 let count = 0
-let texAlpha
 let clock = new THREE.Clock()
 
 let afterimagePass
@@ -56,7 +57,7 @@ let data
 let dataArr
 let objects = []
 let items = []
-let addCredits = []
+// let addCredits = []
 let textCredit = []
 let title = false
 
@@ -65,7 +66,6 @@ let title1,
   title2,
   title3,
   credit1,
-  credit2,
   d1,
   d2,
   zSpeed,
@@ -114,7 +114,7 @@ function getDevice () {
     title1 = 16
     title2 = 14
     title3 = 12
-    credit1 = 52
+    credit1 = 36
     d1 = 800
     d2 = 500
     zSpeed = 0.5
@@ -191,7 +191,8 @@ async function init () {
 
   const message1 = [
     [') HAPTIC )( OPTIC (', title1],
-    ['Touching Collection', title2]
+    ['Touching Collection', title2],
+    ['2020/2022', title3]
   ]
 
   const message2 = [
@@ -199,14 +200,14 @@ async function init () {
     ['2020/2022', title3]
   ]
 
-  let message = message1
-  loadTitle(camera, message)
-
+  // let message = message1
+  // loadTitle(camera, message)
+  render()
   setTimeout(() => {
-    message = message2
+    let message = message1
     loadTitle(camera, message)
-    title = false
-  }, 10000)
+    // title = false
+  }, 5000)
 
   // launch functions
 
@@ -248,15 +249,15 @@ function loadTitle (camera, message) {
       text.material.depthWrite = false
       text.isMesh = true
       setTimeout(() => {
-        const time = performance.now() * 0.0005
-        for(let i = 0; i < 100; i++) {
-          text.material.opacity = 1 / i
-          console.log(text.material.opacity)
-        }
-        if(text.material.opacity <= 0) {
+        // const time = performance.now() * 0.0005
+        // for(let i = 0; i < 100; i++) {
+        //   text.material.opacity = 1 / i
+        //   console.log(text.material.opacity)
+        // }
+        // if(text.material.opacity <= 0.01) {
         text.isMesh = false
-        }
-      }, 4000)
+        
+      }, 5000)
     }
   }) //end load function
 }
@@ -293,7 +294,7 @@ function addInstancedMesh (scene, dataArr) {
         (Math.random() - 0.5) * window.innerHeight * initialWidth
       mesh.position.z = 1000 + (Math.random() - 0.5) * initialDepth
       mesh.scale.x = mesh.scale.y = 0.5
-
+      mesh.layers.enable(1)
       scene.add(mesh)
 
       /////// ADD CREDITS
@@ -301,7 +302,7 @@ function addInstancedMesh (scene, dataArr) {
 
       font.load('fonts/Grotesk/Grotesk03_Bold.json', function (font) {
         let credits =
-          dataArr[i][2] + '\n' + dataArr[i][1] + ' \n(' + dataArr[i][3] + ') '
+          dataArr[i][2] + '\n' + dataArr[i][1] + ' \n(' + dataArr[i][3] + ') \n' + dataArr[i][4] 
 
         /* break dataArr[i][3] into a new line every 3 words */
 
@@ -314,7 +315,18 @@ function addInstancedMesh (scene, dataArr) {
             line += '\n'
           }
         }
-        credits = dataArr[i][2] + '\n' + line + ' \n(' + dataArr[i][3] + ') '
+
+        dataArr[i][4] = dataArr[i][4].split(' ')
+          let line2 = ''
+          for (let j = 0; j < dataArr[i][4].length; j++) {
+            line2 += dataArr[i][4][j] + ' '
+            
+            if (j % 5 === 0 && dataArr[i][4].length > 4) {
+              line2 += '\n'
+            }
+          }
+
+        credits = dataArr[i][2] + '\n' + line + ' \n(' + dataArr[i][3] + ') \n' + line2
         //console.log(line)
 
         const geometry = new TextGeometry(credits, {
@@ -334,71 +346,83 @@ function addInstancedMesh (scene, dataArr) {
         material.blending = THREE.CustomBlending
         material.blendEquation = THREE.AddEquation //default
         material.blendSrc = THREE.OneMinusDstColorFactor //default
-        // material.blendDst = THREE.OneMinusDstColorFactor
 
         material.transparent = true
         geometry.computeBoundingBox()
-        fontMesh.position.set(
-          -texture.image.width / 2 + 50,
-          texture.image.height / 2 - 100,
+
+        const bgGeometry = new THREE.PlaneGeometry(
+          geometry.boundingBox.max.x - geometry.boundingBox.min.x + 100,
+          geometry.boundingBox.max.y - geometry.boundingBox.min.y + 100,
+          30,
+          30)
+        const bgMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 })
+        const bgMesh = new THREE.Mesh(bgGeometry, bgMaterial)
+        bgGeometry.computeBoundingBox()
+        //bgMaterial.transparent =true
+        
+
+        const xMid =
+           -0.5 * (bgMesh.geometry.boundingBox.max.x - bgMesh.geometry.boundingBox.min.x)
+        const yMid = 
+          0.5 * (bgMesh.geometry.boundingBox.max.y - bgMesh.geometry.boundingBox.min.y)
+        // geometry.translate(xMid, 0, -500)
+       
+        bgMesh.position.set(
+          -texture.image.width + 50,
+          texture.image.height / 2 - 50,
           50
         )
 
-       
-          dataArr[i][4] = dataArr[i][4].split(' ')
-          line = ''
-          for (let j = 0; j < dataArr[i][4].length; j++) {
-            line += dataArr[i][4][j] + ' '
-            
-            if (j % 5 === 0 && dataArr[i][4].length > 4) {
-              line += '\n'
-            }
-          }
+        fontMesh.geometry.translate(xMid + 50, yMid - 50, 1)
           
-          let hiddenCredits = line
+          // let hiddenCredits = line
 
-          const geometry2 = new TextGeometry(hiddenCredits, {
-            font: font,
-            size: credit1,
-            height: 1,
-            curveSegments: 12,
-            bevelEnabled: false,
-            bevelThickness: 0,
-            bevelSize: 0,
-            bevelOffset: 0,
-            bevelSegments: 0
-          })
+          // const geometry2 = new TextGeometry(hiddenCredits, {
+          //   font: font,
+          //   size: credit1,
+          //   height: 1,
+          //   curveSegments: 12,
+          //   bevelEnabled: false,
+          //   bevelThickness: 0,
+          //   bevelSize: 0,
+          //   bevelOffset: 0,
+          //   bevelSegments: 0
+          // })
 
-          const creditMesh = new THREE.Mesh(geometry2, material)
+          // const creditMesh = new THREE.Mesh(geometry2, material)
 
-          geometry2.computeBoundingBox()
-          creditMesh.isMesh = false
+          // geometry2.computeBoundingBox()
+          // creditMesh.isMesh = false
 
-          fontMesh.add(creditMesh)
+          // fontMesh.add(creditMesh)
 
-          creditMesh.position.set(
-            0,
-            fontMesh.geometry.boundingBox.min.y - 60,
-            0
-          )
+          // creditMesh.position.set(
+          //   0,
+          //   fontMesh.geometry.boundingBox.min.y - 60,
+          //   0
+          // )
         
-
         fontMesh.isMesh = false
-
-        mesh.name = fontMesh.name = 'data[' + i + ']'
+        bgMesh.isMesh = false
+        bgMesh.add(fontMesh)
+        mesh.name = bgMesh.name = 'data[' + i + ']'
 
         // addCredits.push(fontMesh)
-        textCredit.push(fontMesh)
+        textCredit.push(bgMesh)
+        
         // const xMid =
         //   -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
         // geometry.translate(xMid, 0, -500)
         //fontMesh.renderOrder = 999
+        //bgMesh.material.depthTest = false
+        //bgMesh.material.depthWrite = false
         fontMesh.material.depthTest = false
         fontMesh.material.depthWrite = false
 
-        mesh.add(fontMesh)
-        objects.push([mesh, fontMesh])
+        mesh.add(bgMesh)
+        objects.push([mesh, bgMesh])
         items.push(mesh)
+        items.push(bgMesh)
       })
     })
   }
@@ -418,6 +442,7 @@ function onClick (event) {
   event.preventDefault()
   if (title === false) {
     if (enableSelection === true) {
+      raycaster.layers.set(2)
       const draggableObjects = dragControls.getObjects()
       draggableObjects.length = 0
 
@@ -427,7 +452,7 @@ function onClick (event) {
       raycaster.setFromCamera(mouse, camera)
 
       const intersections = raycaster.intersectObjects(items, true)
-      const intersectionsCredits = raycaster.intersectObjects(textCredit, true)
+      const intersectionsCredits = raycaster.intersectObjects(items, true)
       camRay.setFromCamera(ray, camera)
 
       // calculate objects intersecting the picking ray
@@ -444,20 +469,17 @@ function onClick (event) {
           if (count == 0) {
             if (intersects.length > 0 && intersects[0].distance < 1500) {
               object.children[0].isMesh = true
+              object.children[0].children[0].isMesh = true
               object.opacity = 0.5
               count = 1
             }
           } else if (count == 1) {
-            object.children[0].isMesh = true
-            object.children[0].children[0].isMesh = true
-            count = 2
-          } else if (count == 2) {
             object.children[0].isMesh = false
             object.children[0].children[0].isMesh = false
             count = 0
-          }
+          } 
         }
-        console.log(count)
+       // console.log(count)
       }
 
       if (intersectionsCredits.length > 0) {
@@ -522,12 +544,14 @@ function checkCameraPos () {
   deltaY += camera.position.y - prevCameraY
   deltaZ += camera.position.z - prevCameraZ
 
+
   prevCameraX = camera.position.x
   prevCameraY = camera.position.y
   prevCameraZ = camera.position.z
 
   if (Math.abs(deltaX) > window.innerWidth) {
     addObjects()
+    // newdeltaX = deltaX
     deltaX = 0
   }
   if (Math.abs(deltaY) > window.innerHeight * 1.5) {
@@ -542,7 +566,7 @@ function checkCameraPos () {
 
 function test () {
   camRay.setFromCamera(ray, camera)
-
+  camRay.layers.set(1)
   // calculate objects intersecting the picking ray
   const intersects = camRay.intersectObjects(items, true)
 
@@ -557,9 +581,11 @@ function test () {
     for (let i = 0; i < textCredit.length; i++) {
       if (object.name != textCredit[i].name) {
         textCredit[i].isMesh = false
+        textCredit[i].children[0].isMesh = false
       } else {
         // credit = textCredit[i].name
         textCredit[i].isMesh = true
+        textCredit[i].children[0].isMesh = true
       }
     }
   } else {
@@ -578,7 +604,12 @@ function addObjects () {
   for (var i = 0; i < 15; i++) {
     const randomObj = Math.floor(Math.random() * objects.length)
     var clonedObject = objects[randomObj][0].clone()
+
     scene.add(clonedObject)
+    
+   
+    
+    
 
     clonedObject.position.set(
       camera.position.x + (Math.random() - 0.5) * window.innerWidth * 6,
@@ -589,14 +620,13 @@ function addObjects () {
     clonedObject.children[0].isMesh = false
     clonedObject.children[0].children[0].isMesh = false
     items.push(clonedObject)
-    clonedObject.name = 'clonedData['
     //get position of the cloned object in the array items
     const index = items.indexOf(clonedObject)
     //add the cloned object and its text to the objects array
     objects.push([clonedObject, clonedObject.children[0]])
     //set the name of the cloned object and its text to clonedData[index]
-    clonedObject.name = 'clonedData[' + index + ']'
-    clonedObject.children[0].name = 'clonedData[' + index + ']'
+    clonedObject.name = 'data[' + index + ']'
+    clonedObject.children[0].name = 'data[' + index + ']'
     textCredit.push(clonedObject.children[0])
   }
 }
@@ -619,9 +649,9 @@ function updateFrustumCulling () {
 /////// RENDER
 function render () {
   updateFrustumCulling()
-  // console.log(
-  //   scene.children.length + ' : ' + scene.children.filter(c => c.visible).length
-  // )
+  console.log(
+    scene.children.length + ' : ' + scene.children.filter(c => c.visible).length
+  )
   let deltaTime = clock.getDelta()
 
   controls.update(deltaTime)
