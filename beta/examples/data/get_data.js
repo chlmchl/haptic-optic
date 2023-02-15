@@ -1,7 +1,7 @@
 let credits = []
 
-
-    export async function GetData() {
+export class GetData {
+    GetDataArray() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -30,10 +30,6 @@ let credits = []
                 let rowDate = rowDateNode.nodeValue
                 items.push(rowDate)
 
-                let rowCreditNode = document.createTextNode(rowInfo[7])
-                let rowCredit = rowCreditNode.nodeValue
-                items.push(rowCredit)
-
                 // let rowAudioNode = document.createTextNode(rowInfo[7])
                 credits.push(items)
             }
@@ -43,8 +39,9 @@ let credits = []
     xhttp.open("GET", "https://sheets.googleapis.com/v4/spreadsheets/1WtwrA3Bou1MluhOmcEFiJSNBVFt5aq_1821tFXLiehI/values/index?key=AIzaSyDhlpOIwLeSZUTfp1OUPRagso6CMgbMzOA");
     xhttp.send();
     // console.log(credits);
-    return Promise.resolve(credits); 
+    return credits;
+    
     }
-
+}
 
 // export{GetData}
