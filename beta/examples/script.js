@@ -111,10 +111,10 @@ function getDevice () {
     title1 = 16
     title2 = 14
     title3 = 12
-    credit1 = 52
+    credit1 = 32
     d1 = 800
     d2 = 500
-    zSpeed = 0.5
+    zSpeed = 0.2
     pSpeed = 1
     initialWidth = 8
     initialDepth = 4000
@@ -192,7 +192,6 @@ async function init () {
     ['Touching Collection', title2],
     ['2020/2022', title3]
   ]
-
 
   setTimeout(() => {
     let message = message1
@@ -288,7 +287,7 @@ function addInstancedMesh (scene, dataArr) {
 
       font.load('fonts/Grotesk/Grotesk03_Bold.json', function (font) {
         let credits =
-          dataArr[i][2] + '\n' + dataArr[i][1] + ' \n(' + dataArr[i][3] + ') '
+          dataArr[i][2] + '\n' + dataArr[i][1] + ' \n(' + dataArr[i][3] + ') \n' + dataArr[i][4] 
 
         /* break dataArr[i][3] into a new line every 3 words */
 
@@ -297,7 +296,7 @@ function addInstancedMesh (scene, dataArr) {
         for (let j = 0; j < dataArr[i][1].length; j++) {
           line += dataArr[i][1][j] + ' '
 
-          if (j % 3 === 0 && dataArr[i][1].length > 4) {
+          if (j % 5 === 0 && dataArr[i][1].length > 5) {
             line += '\n'
           }
         }
@@ -307,12 +306,11 @@ function addInstancedMesh (scene, dataArr) {
           for (let j = 0; j < dataArr[i][4].length; j++) {
             line2 += dataArr[i][4][j] + ' '
             
-            if (j % 5 === 0 && dataArr[i][4].length > 4) {
+            if (j % 5 === 0 && dataArr[i][4].length > 5) {
               line2 += '\n'
             }
           }
-          
-         
+
         credits = dataArr[i][2] + '\n' + line + ' \n(' + dataArr[i][3] + ') \n' + line2
         //console.log(line)
 
@@ -327,43 +325,64 @@ function addInstancedMesh (scene, dataArr) {
           bevelOffset: 0,
           bevelSegments: 0
         })
-        geometry.computeBoundingBox()
         const material = new THREE.MeshBasicMaterial({ color: 0xefefef })
         const fontMesh = new THREE.Mesh(geometry, material)
         material.blending = THREE.CustomBlending
         material.blendEquation = THREE.AddEquation //default
         material.blendSrc = THREE.OneMinusDstColorFactor //default
-        // material.blendDst = THREE.OneMinusDstColorFactor
 
         material.transparent = true
         geometry.computeBoundingBox()
-        fontMesh.position.set(
-          -texture.image.width / 2 + 50,
-          texture.image.height / 2 - 100,
+
+        const bgGeometry = new THREE.PlaneGeometry(
+          geometry.boundingBox.max.x - geometry.boundingBox.min.x + 100,
+          geometry.boundingBox.max.y - geometry.boundingBox.min.y + 100,
+          30,
+          30)
+        const bgMaterial = new THREE.MeshBasicMaterial({ color: 0xd6d6d6 })
+        const bgMesh = new THREE.Mesh(bgGeometry, bgMaterial)
+        bgGeometry.computeBoundingBox()
+        //bgMaterial.transparent =true
+        
+
+        const xMid =
+           -0.5 * (bgMesh.geometry.boundingBox.max.x - bgMesh.geometry.boundingBox.min.x)
+        const yMid = 
+          0.5 * (bgMesh.geometry.boundingBox.max.y - bgMesh.geometry.boundingBox.min.y)
+        // geometry.translate(xMid, 0, -500)
+       
+        bgMesh.position.set(
+          texture.image.width - texture.image.width / 2 - 50,
+          -texture.image.height / 2 - 50,
           50
         )
 
-       
-
-
-
-    
+        fontMesh.geometry.translate(xMid + 40, yMid - 60, 1)
+          
+          
+        
         fontMesh.isMesh = false
-
-        mesh.name = fontMesh.name = 'data[' + i + ']'
-
+        bgMesh.isMesh = false
+        bgMesh.add(fontMesh)
+        mesh.name = bgMesh.name = 'data[' + i + ']'
+    
+        fontMesh.layers.enable(2)
+        bgMesh.layers.enable(1)
+        mesh.layers.enable(1)
         // addCredits.push(fontMesh)
-        textCredit.push(fontMesh)
+        textCredit.push(bgMesh)
+        
         // const xMid =
         //   -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
         // geometry.translate(xMid, 0, -500)
-        //fontMesh.renderOrder = 999
+
         fontMesh.material.depthTest = false
         fontMesh.material.depthWrite = false
 
-        mesh.add(fontMesh)
-        objects.push([mesh, fontMesh])
+        mesh.add(bgMesh)
+        objects.push([mesh, bgMesh])
         items.push(mesh)
+        items.push(bgMesh)
       })
     })
   }
@@ -390,10 +409,13 @@ function onClick (event) {
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
 
       raycaster.setFromCamera(mouse, camera)
+      raycaster.layers.set(1)
+     
 
       const intersections = raycaster.intersectObjects(items, true)
       const intersectionsCredits = raycaster.intersectObjects(textCredit, true)
       camRay.setFromCamera(ray, camera)
+      camRay.layers.set(1)
 
       // calculate objects intersecting the picking ray
       const intersects = camRay.intersectObjects(items, true)
@@ -406,20 +428,9 @@ function onClick (event) {
         draggableObjects.push(group)
 
         if (onMobile === true) {
-          if (count == 0) {
-            if (intersects.length > 0 && intersects[0].distance < 1500) {
-              object.children[0].isMesh = true
-              object.opacity = 0.5
-              count = 1
-            }
-          } else if (count == 1) {
-            object.children[0].isMesh = true
-            object.children[0].children[0].isMesh = true
-            count = 2
-          } else if (count == 2) {
-            object.children[0].isMesh = false
-            object.children[0].children[0].isMesh = false
-            count = 0
+          if (intersects.length > 0 && intersects[0].distance < 1500) {
+            object.children[0].isMesh = !object.children[0].isMesh
+            object.children[0].children[0].isMesh = !object.children[0].children[0].isMesh
           }
         }
         console.log(count)
@@ -427,7 +438,8 @@ function onClick (event) {
 
       if (intersectionsCredits.length > 0) {
         const object = intersectionsCredits[0].object
-        object.children[0].isMesh = !object.children[0].isMesh
+        // object.children[0].isMesh = !object.children[0].isMesh
+        // object.children[0].children[0].isMesh = !object.children[0].children[0].isMesh
         object.parent.attach(object)
 
         dragControls.transformGroup = true
@@ -438,13 +450,9 @@ function onClick (event) {
         dragControls.transformGroup = false
         draggableObjects.push(...items)
       }
-      // if (groupCredit.children.length === 0) {
-      //   dragControls.transformGroup = false
-      //   draggableObjects.push(...textCredit)
-      // }
+
     }
   }
-  // render()
 }
 
 function createControls (camera) {
@@ -507,7 +515,7 @@ function checkCameraPos () {
 
 function test () {
   camRay.setFromCamera(ray, camera)
-
+  camRay.layers.set(1)
   // calculate objects intersecting the picking ray
   const intersects = camRay.intersectObjects(items, true)
 
@@ -517,20 +525,21 @@ function test () {
     intersects[0].distance < d1
   ) {
     const object = intersects[0].object
-    // console.log(intersects[0].distance)
-    //console.log(object.name + object.children[0].name)
     for (let i = 0; i < textCredit.length; i++) {
       if (object.name != textCredit[i].name) {
         textCredit[i].isMesh = false
+        textCredit[i].children[0].isMesh = false
       } else {
         // credit = textCredit[i].name
         textCredit[i].isMesh = true
+        textCredit[i].children[0].isMesh = true
+
       }
     }
   } else {
     for (let i = 0; i < textCredit.length; i++) {
       textCredit[i].isMesh = false
-      // textCredit[i].children[0].isMesh = false
+      textCredit[i].children[0].isMesh = false
     }
   }
 }
