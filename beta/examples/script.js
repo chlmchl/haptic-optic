@@ -74,7 +74,7 @@ const mouse = new THREE.Vector2(),
 
 const camRay = new THREE.Raycaster()
 const ray = new THREE.Vector3()
-// getDevice()
+getDevice()
 getData()
 
 async function getData () {
@@ -85,25 +85,27 @@ async function getData () {
   }, 500)
 }
 
-// function getDevice () {
-  // if (
-  //   window.clientInformation.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i)
-  //   )
-  //  {
+function getDevice () {
+  if (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent)
+
+    )
+   {
     // true for mobile device
-  //   console.log(window.clientInformation)
-  //   onMobile = true
-  //   title1 = 9
-  //   title2 = 7
-  //   title3 = 6
-  //   credit1 = 32
-  //   d1 = 900
-  //   d2 = 700
-  //   zSpeed = 0.1
-  //   pSpeed = 0.1
-  //   initialWidth = 12
-  //   initialDepth = 5000
-  // } else {
+    console.log(window.clientInformation)
+    onMobile = true
+    title1 = 9
+    title2 = 7
+    title3 = 6
+    credit1 = 32
+    d1 = 900
+    d2 = 700
+    zSpeed = 0.1
+    pSpeed = 0.1
+    initialWidth = 12
+    initialDepth = 5000
+  } else {
     // false for not mobile device
     onMobile = false
     title1 = 16
@@ -116,8 +118,8 @@ async function getData () {
     pSpeed = 1
     initialWidth = 8
     initialDepth = 4000
-  // }
-// }
+  }
+}
 
 async function init () {
   const aspect = window.innerWidth / window.innerHeight
