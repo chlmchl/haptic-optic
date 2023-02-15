@@ -21,8 +21,7 @@ let camera, scene
 
 let renderer, composer, bloomPass
 let controls, dragControls
-let mesh, group, groupCredit
-let dummy = new THREE.Object3D()
+let group, groupCredit
 let enableSelection = true
 
 let prevCameraX = 0
@@ -32,7 +31,6 @@ let deltaX = 0
 let deltaY = 0
 let deltaZ = 0
 let count = 0
-let texAlpha
 let clock = new THREE.Clock()
 
 let afterimagePass
@@ -52,11 +50,9 @@ const fogParams = {
   fogNoiseFreq: 0.0012,
   fogNoiseImpact: 0.3
 }
-let data
 let dataArr
 let objects = []
 let items = []
-let addCredits = []
 let textCredit = []
 let title = false
 
@@ -65,7 +61,6 @@ let title1,
   title2,
   title3,
   credit1,
-  credit2,
   d1,
   d2,
   zSpeed,
@@ -79,7 +74,7 @@ const mouse = new THREE.Vector2(),
 
 const camRay = new THREE.Raycaster()
 const ray = new THREE.Vector3()
-getDevice()
+// getDevice()
 getData()
 
 async function getData () {
@@ -90,25 +85,25 @@ async function getData () {
   }, 500)
 }
 
-function getDevice () {
-  if (
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    )
-  ) {
+// function getDevice () {
+  // if (
+  //   window.clientInformation.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i)
+  //   )
+  //  {
     // true for mobile device
-    onMobile = true
-    title1 = 9
-    title2 = 7
-    title3 = 6
-    credit1 = 32
-    d1 = 900
-    d2 = 700
-    zSpeed = 0.1
-    pSpeed = 0.1
-    initialWidth = 12
-    initialDepth = 5000
-  } else {
+  //   console.log(window.clientInformation)
+  //   onMobile = true
+  //   title1 = 9
+  //   title2 = 7
+  //   title3 = 6
+  //   credit1 = 32
+  //   d1 = 900
+  //   d2 = 700
+  //   zSpeed = 0.1
+  //   pSpeed = 0.1
+  //   initialWidth = 12
+  //   initialDepth = 5000
+  // } else {
     // false for not mobile device
     onMobile = false
     title1 = 16
@@ -121,8 +116,8 @@ function getDevice () {
     pSpeed = 1
     initialWidth = 8
     initialDepth = 4000
-  }
-}
+  // }
+// }
 
 async function init () {
   const aspect = window.innerWidth / window.innerHeight
@@ -136,7 +131,6 @@ async function init () {
   ray.x = 0
   ray.y = 0
   ray.z = 0
-  // camera.add(ray)
 
   // stats
   stats = new Stats()
@@ -153,8 +147,9 @@ async function init () {
   document.querySelector('#webgl').appendChild(renderer.domElement)
 
   // fog
-  scene.background = new THREE.Color(fogParams.fogHorizonColor)
-  scene.fog = new THREE.FogExp2(fogParams.fogHorizonColor, fogParams.fogDensity)
+  scene.background = new THREE.Color(0xffffff)
+  // scene.background = new THREE.Color(fogParams.fogHorizonColor)
+  // scene.fog = new THREE.FogExp2(fogParams.fogHorizonColor, fogParams.fogDensity)
 
   // postprocessing
   composer = new EffectComposer(renderer)
@@ -174,6 +169,7 @@ async function init () {
   bloomPass.radius = params.bloomRadius
   composer.addPass(bloomPass)
 
+  
   // event listeners
   window.addEventListener('resize', onWindowResize(camera, renderer, composer))
   let portrait = window.matchMedia('(orientation: portrait)')
@@ -303,7 +299,19 @@ function addInstancedMesh (scene, dataArr) {
             line += '\n'
           }
         }
-        credits = dataArr[i][2] + '\n' + line + ' \n(' + dataArr[i][3] + ') '
+
+        dataArr[i][4] = dataArr[i][4].split(' ')
+          let line2 = ''
+          for (let j = 0; j < dataArr[i][4].length; j++) {
+            line2 += dataArr[i][4][j] + ' '
+            
+            if (j % 5 === 0 && dataArr[i][4].length > 4) {
+              line2 += '\n'
+            }
+          }
+          
+         
+        credits = dataArr[i][2] + '\n' + line + ' \n(' + dataArr[i][3] + ') \n' + line2
         //console.log(line)
 
         const geometry = new TextGeometry(credits, {
@@ -334,44 +342,10 @@ function addInstancedMesh (scene, dataArr) {
         )
 
        
-          dataArr[i][4] = dataArr[i][4].split(' ')
-          line = ''
-          for (let j = 0; j < dataArr[i][4].length; j++) {
-            line += dataArr[i][4][j] + ' '
-            
-            if (j % 5 === 0 && dataArr[i][4].length > 4) {
-              line += '\n'
-            }
-          }
-          
-          let hiddenCredits = line
 
-          const geometry2 = new TextGeometry(hiddenCredits, {
-            font: font,
-            size: credit1,
-            height: 1,
-            curveSegments: 12,
-            bevelEnabled: false,
-            bevelThickness: 0,
-            bevelSize: 0,
-            bevelOffset: 0,
-            bevelSegments: 0
-          })
 
-          const creditMesh = new THREE.Mesh(geometry2, material)
 
-          geometry2.computeBoundingBox()
-          creditMesh.isMesh = false
-
-          fontMesh.add(creditMesh)
-
-          creditMesh.position.set(
-            0,
-            fontMesh.geometry.boundingBox.min.y - 60,
-            0
-          )
-        
-
+    
         fontMesh.isMesh = false
 
         mesh.name = fontMesh.name = 'data[' + i + ']'
@@ -554,7 +528,7 @@ function test () {
   } else {
     for (let i = 0; i < textCredit.length; i++) {
       textCredit[i].isMesh = false
-      textCredit[i].children[0].isMesh = false
+      // textCredit[i].children[0].isMesh = false
     }
   }
 }
@@ -576,7 +550,7 @@ function addObjects () {
     )
 
     clonedObject.children[0].isMesh = false
-    clonedObject.children[0].children[0].isMesh = false
+    // clonedObject.children[0].children[0].isMesh = false
     items.push(clonedObject)
     clonedObject.name = 'clonedData['
     //get position of the cloned object in the array items
