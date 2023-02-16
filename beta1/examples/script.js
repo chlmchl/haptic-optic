@@ -102,8 +102,8 @@ function getDevice () {
     d2 = 700
     zSpeed = 0.1
     pSpeed = 0.1
-    initialWidth = 12
-    initialDepth = 5000
+    initialWidth = 8
+    initialDepth = 4000
   } else {
     // false for not mobile device
     onMobile = false
@@ -115,8 +115,8 @@ function getDevice () {
     d2 = 500
     zSpeed = 0.2
     pSpeed = 1
-    initialWidth = 8
-    initialDepth = 4000
+    initialWidth = 4
+    initialDepth = 3000
   }
 }
 
@@ -277,7 +277,7 @@ function addInstancedMesh (scene, dataArr) {
       mesh.position.y =
         (Math.random() - 0.5) * window.innerHeight * initialWidth
       mesh.position.z = 1000 + (Math.random() - 0.5) * initialDepth
-      mesh.scale.x = mesh.scale.y = 0.5
+      mesh.scale.x = mesh.scale.y = 0.85
 
       scene.add(mesh)
 
