@@ -192,10 +192,10 @@ async function init () {
     ['2020/2022', title3]
   ]
 
-  // setTimeout(() => {
-  //   let message = message1
-  //   loadTitle(camera, message)
-  // }, 5000)
+  setTimeout(() => {
+    let message = message1
+    loadTitle(camera, message)
+  }, 7000)
 
   // launch functions
 
@@ -241,7 +241,7 @@ function loadTitle (camera, message) {
       setTimeout(() => {
         text.isMesh = false
         title = false
-      }, 5000)
+      }, 7000)
     }
   }) //end load function
 }
