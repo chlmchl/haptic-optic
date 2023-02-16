@@ -277,7 +277,7 @@ function addInstancedMesh (scene, dataArr) {
       mesh.position.y =
         (Math.random() - 0.5) * window.innerHeight * initialWidth
       mesh.position.z = 1000 + (Math.random() - 0.5) * initialDepth
-      mesh.scale.x = mesh.scale.y = 0.7
+      mesh.scale.x = mesh.scale.y = 0.5
 
       scene.add(mesh)
 
