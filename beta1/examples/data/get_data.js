@@ -29,11 +29,11 @@ async function GetData() {
                 let rowDate = rowDateNode.nodeValue
                 items.push(rowDate)
 
-                let rowCreditNode = document.createTextNode(rowInfo[4])
+                let rowCreditNode = document.createTextNode(rowInfo[7])
                 let rowCredit = rowCreditNode.nodeValue
                 items.push(rowCredit)
 
-                // let rowAudioNode = document.createTextNode(rowInfo[7])
+                //let rowAdditionnalCreditsNode = document.createTextNode(rowInfo[7])
                 credits.push(items)
             }
             

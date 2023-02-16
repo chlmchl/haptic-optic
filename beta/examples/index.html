@@ -39,7 +39,7 @@
 			}
 
 			img.logo {
-				width: 70px;
+				width: 80px;
 				font-weight: bold;
 				position: fixed;
 				animation: blink 3s infinite ease-in-out;
@@ -47,16 +47,16 @@
 
 			@keyframes blink {
 				0% {
-					width: 70px;
+					width: 80px;
 					opacity: 0;
 				}
 				50%{
 					
-					width: 100px;
+					width: 110px;
 					opacity: 1;
 				}
 				100% {
-					width: 70px;
+					width: 80px;
 					opacity: 0;
 				}
 			}
@@ -64,13 +64,34 @@
 			a {
 				color: #f00;
 			}
+
+			header {
+				display: block;
+				position: fixed;
+				z-index: 0;
+				opacity: 0.75;
+				top: 20px;
+				float: top;
+				left: 20px;
+				width: 40px
+			}
+
+			header:hover {
+				opacity: 1;
+			}
+
+			header.img.menu {
+				width: 100%;
+			}
 			
 
 		</style>
 	</head>
 
 	<body>
+		<header><img class="menu" src="img/logo.svg"></header>
 		<section><img class="logo" src="img/logo.svg"></section>
+		<header><img class="menu" src="img/logo.svg"></header>
 		
 		<div id="css"></div>
 		<div id="webgl"></div>

@@ -192,10 +192,10 @@ async function init () {
     ['2020/2022', title3]
   ]
 
-  setTimeout(() => {
-    let message = message1
-    loadTitle(camera, message)
-  }, 5000)
+  // setTimeout(() => {
+  //   let message = message1
+  //   loadTitle(camera, message)
+  // }, 5000)
 
   // launch functions
 
@@ -276,8 +276,10 @@ function addInstancedMesh (scene, dataArr) {
       mesh.position.x = (Math.random() - 0.5) * window.innerWidth * initialWidth
       mesh.position.y =
         (Math.random() - 0.5) * window.innerHeight * initialWidth
-      mesh.position.z = 1000 + (Math.random() - 0.5) * initialDepth
-      mesh.scale.x = mesh.scale.y = 0.7
+      mesh.position.z = 1000 + (Math.random(
+      ) - 0.5) * initialDepth
+      mesh.scale.x = mesh.scale.y = 0.5
+     // mesh.renderOrder = 1
 
       scene.add(mesh)
 
@@ -317,7 +319,7 @@ function addInstancedMesh (scene, dataArr) {
           credits =  dataArr[i][3] + line2 
           console.log("w")}
           else {
-            credits =  dataArr[i][2] + line + ' \n' + dataArr[i][3] + line2
+            credits =  dataArr[i][2] + '\n' + line + ' \n' + dataArr[i][3] + line2
             console.log("dezdazé")
           }
           console.log(credits)
@@ -374,9 +376,9 @@ function addInstancedMesh (scene, dataArr) {
         bgMesh.add(fontMesh)
         mesh.name = bgMesh.name = 'data[' + i + ']'
     
-        fontMesh.layers.enable(2)
-        bgMesh.layers.enable(1)
-        mesh.layers.enable(1)
+        // fontMesh.layers.enable()
+        // bgMesh.layers.enable(1)
+        // mesh.layers.enable(1)
         // addCredits.push(fontMesh)
         textCredit.push(bgMesh)
         //textCredit.push(fontMesh)
@@ -385,8 +387,8 @@ function addInstancedMesh (scene, dataArr) {
         //   -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
         // geometry.translate(xMid, 0, -500)
 
-        fontMesh.material.depthTest = false
-        fontMesh.material.depthWrite = false
+        // fontMesh.material.depthTest = false
+        // fontMesh.material.depthWrite = false
 
         mesh.add(bgMesh)
         objects.push([mesh, bgMesh])
@@ -419,13 +421,13 @@ function onClick (event) {
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
 
       raycaster.setFromCamera(mouse, camera)
-      raycaster.layers.set(1)
+      // raycaster.layers.set(1)
      
 
       const intersections = raycaster.intersectObjects(items, true)
       const intersectionsCredits = raycaster.intersectObjects(textCredit, true)
       camRay.setFromCamera(ray, camera)
-      camRay.layers.set(1)
+      // camRay.layers.set(1)
 
       // calculate objects intersecting the picking ray
       const intersects = camRay.intersectObjects(items, true)
@@ -529,7 +531,7 @@ function checkCameraPos () {
 
 function test () {
   camRay.setFromCamera(ray, camera)
-  camRay.layers.set(1)
+  // camRay.layers.set(1)
   // calculate objects intersecting the picking ray
   const intersects = camRay.intersectObjects(items, true)
 
@@ -573,11 +575,11 @@ function addObjects () {
       camera.position.y + (Math.random() - 0.5) * window.innerHeight * 2,
       camera.position.z + (Math.random() - 0.5) * 10000
     )
-    clonedObject.layers.enable(1)
+    // clonedObject.layers.enable(1)
     clonedObject.children[0].isMesh = false
-    clonedObject.children[0].layers.enable(1)
+    // clonedObject.children[0].layers.enable(1)
     clonedObject.children[0].children[0].isMesh = false
-    clonedObject.children[0].children[0].layers.enable(2)
+    // clonedObject.children[0].children[0].layers.enable(2)
     items.push(clonedObject)
     clonedObject.name = 'clonedData['
     //get position of the cloned object in the array items
