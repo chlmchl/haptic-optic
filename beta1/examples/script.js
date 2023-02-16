@@ -111,7 +111,7 @@ function getDevice () {
     title2 = 14
     title3 = 12
     credit1 = 32
-    d1 = 800
+    d1 = 1000
     d2 = 500
     zSpeed = 0.2
     pSpeed = 1
