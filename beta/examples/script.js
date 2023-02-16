@@ -88,11 +88,11 @@ async function getData () {
 function getDevice () {
   if (
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent)
+      navigator.userAgent
     )
-   {
+  ) {
     // true for mobile device
-    console.log("onMobile")
+    console.log('onMobile')
     onMobile = true
     title1 = 9
     title2 = 7
@@ -170,7 +170,6 @@ async function init () {
   bloomPass.radius = params.bloomRadius
   composer.addPass(bloomPass)
 
-  
   // event listeners
   window.addEventListener('resize', onWindowResize(camera, renderer, composer))
   let portrait = window.matchMedia('(orientation: portrait)')
@@ -230,7 +229,7 @@ function loadTitle (camera, message) {
         -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
       const yMid =
         0.5 * (geometry.boundingBox.max.y - geometry.boundingBox.min.y)
-      geometry.translate(xMid, (-30 * i) + 30, -200)
+      geometry.translate(xMid, -30 * i + 30, -200)
 
       camera.add(text)
 
@@ -276,10 +275,9 @@ function addInstancedMesh (scene, dataArr) {
       mesh.position.x = (Math.random() - 0.5) * window.innerWidth * initialWidth
       mesh.position.y =
         (Math.random() - 0.5) * window.innerHeight * initialWidth
-      mesh.position.z = 1000 + (Math.random(
-      ) - 0.5) * initialDepth
+      mesh.position.z = 1000 + (Math.random() - 0.5) * initialDepth
       mesh.scale.x = mesh.scale.y = 0.5
-     // mesh.renderOrder = 1
+      // mesh.renderOrder = 1
 
       scene.add(mesh)
 
@@ -287,7 +285,7 @@ function addInstancedMesh (scene, dataArr) {
       const font = new FontLoader()
 
       font.load('fonts/Grotesk/Grotesk03_Bold.json', function (font) {
-        let credits        
+        let credits
         /* break dataArr[i][3] into a new line every 3 words */
 
         // dataArr[i][1] = dataArr[i][1].split(' ')
@@ -304,25 +302,35 @@ function addInstancedMesh (scene, dataArr) {
         //   let line2 = ''
         //   for (let j = 0; j < dataArr[i][4].length; j++) {
         //     line2 += dataArr[i][4][j] + ' '
-            
+
         //     if (j % 7 === 1 && dataArr[i][4].length > 10) {
         //       line2 += '\n'
         //     }
         //   }
-          //console.log(dataArr[i][2])
-        
-        if(dataArr[i][2].length < 2)
-        {  
-          credits =  dataArr[i][1] + ' \n' + dataArr[i][3] +  ' \n'+ dataArr[i][4]
-          console.log("wo")
-        } else if (dataArr[i][2].length <= 2 && dataArr[i][1].length <= 2){
-          credits =  dataArr[i][3] + dataArr[i][4] 
-          console.log("w")}
-          else {
-            credits =  dataArr[i][2] + '\n' + dataArr[i][1] + ' \n' + dataArr[i][3] + ' \n'+ dataArr[i][4]
-            console.log("dezdazé")
-          }
-          console.log(credits)
+        //console.log(dataArr[i][2])
+        if (dataArr[i][4] === 'undefined') {
+          dataArr[i][4] = ''
+        }
+
+        if (dataArr[i][2].length < 2) {
+          credits =
+            dataArr[i][1] + ' \n' + dataArr[i][3] + ' \n' + dataArr[i][4]
+          console.log('wo')
+        } else if (dataArr[i][2].length <= 2 && dataArr[i][1].length <= 2) {
+          credits = dataArr[i][3] + dataArr[i][4]
+          console.log('w')
+        } else {
+          credits =
+            dataArr[i][2] +
+            '\n' +
+            dataArr[i][1] +
+            ' \n' +
+            dataArr[i][3] +
+            ' \n' +
+            dataArr[i][4]
+          console.log('dezdazé')
+        }
+        console.log(credits)
 
         //console.log(line)
 
@@ -350,19 +358,23 @@ function addInstancedMesh (scene, dataArr) {
           geometry.boundingBox.max.x - geometry.boundingBox.min.x + 100,
           geometry.boundingBox.max.y - geometry.boundingBox.min.y + 100,
           30,
-          30)
+          30
+        )
         const bgMaterial = new THREE.MeshBasicMaterial({ color: 0xd6d6d6 })
         const bgMesh = new THREE.Mesh(bgGeometry, bgMaterial)
         bgGeometry.computeBoundingBox()
         //bgMaterial.transparent =true
-        
 
         const xMid =
-           -0.5 * (bgMesh.geometry.boundingBox.max.x - bgMesh.geometry.boundingBox.min.x)
-        const yMid = 
-          0.5 * (bgMesh.geometry.boundingBox.max.y - bgMesh.geometry.boundingBox.min.y)
+          -0.5 *
+          (bgMesh.geometry.boundingBox.max.x -
+            bgMesh.geometry.boundingBox.min.x)
+        const yMid =
+          0.5 *
+          (bgMesh.geometry.boundingBox.max.y -
+            bgMesh.geometry.boundingBox.min.y)
         // geometry.translate(xMid, 0, -500)
-       
+
         bgMesh.position.set(
           texture.image.width - texture.image.width / 2 - 50,
           -texture.image.height / 2 - 50,
@@ -370,19 +382,19 @@ function addInstancedMesh (scene, dataArr) {
         )
 
         fontMesh.geometry.translate(xMid + 40, yMid - 60, 1)
-        
+
         fontMesh.isMesh = false
         bgMesh.isMesh = false
         bgMesh.add(fontMesh)
         mesh.name = bgMesh.name = 'data[' + i + ']'
-    
+
         fontMesh.layers.enable()
         bgMesh.layers.enable(1)
         mesh.layers.enable(1)
         // addCredits.push(fontMesh)
         textCredit.push(bgMesh)
         //textCredit.push(fontMesh)
-        
+
         // const xMid =
         //   -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
         // geometry.translate(xMid, 0, -500)
@@ -422,7 +434,6 @@ function onClick (event) {
 
       raycaster.setFromCamera(mouse, camera)
       raycaster.layers.set(1)
-     
 
       const intersections = raycaster.intersectObjects(items, true)
       const intersectionsCredits = raycaster.intersectObjects(textCredit, true)
@@ -439,16 +450,15 @@ function onClick (event) {
         dragControls.transformGroup = true
         draggableObjects.push(group)
 
-        
-          if (intersects.length > 0 && intersects[0].distance < 1500) {
-            if(object.children[0].children[0] !== undefined) {
+        if (intersects.length > 0 && intersects[0].distance < 1500) {
+          if (object.children[0].children[0] !== undefined) {
             object.children[0].isMesh = !object.children[0].isMesh
-            object.children[0].children[0].isMesh = !object.children[0].children[0].isMesh
+            object.children[0].children[0].isMesh =!object.children[0].children[0].isMesh
           } else {
-              object.isMesh = !object.isMesh
-              object.children[0].isMesh = !object.children[0].isMesh
-            }
+            object.isMesh = !object.isMesh
+            object.children[0].isMesh = !object.children[0].isMesh
           }
+        } 
         // console.log(count)
       }
 
@@ -466,7 +476,6 @@ function onClick (event) {
         dragControls.transformGroup = false
         draggableObjects.push(...items)
       }
-
     }
   }
 }
@@ -549,7 +558,6 @@ function test () {
         // credit = textCredit[i].name
         textCredit[i].isMesh = true
         textCredit[i].children[0].isMesh = true
-
       }
     }
   } else {

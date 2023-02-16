@@ -310,6 +310,10 @@ function addInstancedMesh (scene, dataArr) {
         //     }
         //   }
           //console.log(dataArr[i][2])
+
+        if(dataArr[i][4] === "undefined") {
+          dataArr[i][4] = "";
+        }
         
         if(dataArr[i][2].length < 2)
         {  
