@@ -277,7 +277,7 @@ function addInstancedMesh (scene, dataArr) {
       mesh.position.y =
         (Math.random() - 0.5) * window.innerHeight * initialWidth
       mesh.position.z = 1000 + (Math.random() - 0.5) * initialDepth
-      mesh.scale.x = mesh.scale.y = 0.85
+      mesh.scale.x = mesh.scale.y = 0.7
 
       scene.add(mesh)
 
@@ -285,9 +285,11 @@ function addInstancedMesh (scene, dataArr) {
       const font = new FontLoader()
 
       font.load('fonts/Grotesk/Grotesk03_Bold.json', function (font) {
-        let credits =
-          dataArr[i][2] + '\n' + dataArr[i][1] + ' \n(' + dataArr[i][3] + ') \n' + dataArr[i][4] 
+        let credits
 
+    
+       
+        
         /* break dataArr[i][3] into a new line every 3 words */
 
         dataArr[i][1] = dataArr[i][1].split(' ')
@@ -295,7 +297,7 @@ function addInstancedMesh (scene, dataArr) {
         for (let j = 0; j < dataArr[i][1].length; j++) {
           line += dataArr[i][1][j] + ' '
 
-          if (j % 5 === 0 && dataArr[i][1].length > 5) {
+          if (j % 7 === 0 && dataArr[i][1].length > 7) {
             line += '\n'
           }
         }
@@ -305,12 +307,18 @@ function addInstancedMesh (scene, dataArr) {
           for (let j = 0; j < dataArr[i][4].length; j++) {
             line2 += dataArr[i][4][j] + ' '
             
-            if (j % 5 === 0 && dataArr[i][4].length > 5) {
+            if (j % 7 === 0 && dataArr[i][4].length > 7) {
               line2 += '\n'
             }
           }
 
-        credits = dataArr[i][2] + '\n' + line + ' \n(' + dataArr[i][3] + ') \n' + line2
+        
+        if(dataArr[i][2] === '\n' || dataArr[i][1] === '\n')
+        {  
+          credits =  line + ' ' + dataArr[i][3] + '' + line2
+        } else {
+          credits = dataArr[i][2] + line  + dataArr[i][3] + line2}
+
         //console.log(line)
 
         const geometry = new TextGeometry(credits, {
@@ -426,7 +434,7 @@ function onClick (event) {
         dragControls.transformGroup = true
         draggableObjects.push(group)
 
-        if (onMobile === true) {
+        
           if (intersects.length > 0 && intersects[0].distance < 1500) {
             if(object.children[0].children[0] !== undefined) {
             object.children[0].isMesh = !object.children[0].isMesh
@@ -435,9 +443,7 @@ function onClick (event) {
               object.isMesh = !object.isMesh
               object.children[0].isMesh = !object.children[0].isMesh
             }
-           
           }
-        }
         // console.log(count)
       }
 
@@ -484,9 +490,9 @@ function animate () {
     object.position.z += Math.sin((i + time) / 35) * 0.06
   }
   checkCameraPos()
-  if (title === false && onMobile === false) {
-    test()
-  }
+  // if (title === false && onMobile === false) {
+  //   test()
+  // }
 
   controls.update()
   stats.update()

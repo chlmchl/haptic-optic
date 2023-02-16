@@ -18,7 +18,7 @@
 				background-color: #fff;
 				width: 100vw;
 				height: 100vh;
-				animation: fade 5s 5s ease-in-out forwards;
+				animation: fade 5s 7s ease-in-out forwards;
 				animation-iteration-count: 1;
 				position: fixed;
 				z-index: 100;
@@ -38,19 +38,26 @@
 				}
 			}
 
-			p {
-				font-size: 12px;
+			img.logo {
+				width: 70px;
 				font-weight: bold;
 				position: fixed;
-				animation: blink 1s steps(5, start) infinite;
+				animation: blink 3s infinite ease-in-out;
 			}
 
 			@keyframes blink {
-				from {
-					scale: 0.5;
+				0% {
+					width: 70px;
+					opacity: 0;
 				}
-				to {
-					scale: 1;
+				50%{
+					
+					width: 100px;
+					opacity: 1;
+				}
+				100% {
+					width: 70px;
+					opacity: 0;
 				}
 			}
 
@@ -63,7 +70,7 @@
 	</head>
 
 	<body>
-		<section><p> loading </p></section>
+		<section><img class="logo" src="img/logo.svg"></section>
 		
 		<div id="css"></div>
 		<div id="webgl"></div>
