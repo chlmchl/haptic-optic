@@ -393,8 +393,8 @@ function addInstancedMesh (scene, dataArr) {
         mesh.add(bgMesh)
         objects.push([mesh, bgMesh])
         items.push(mesh)
-        items.push(bgMesh)
-        //items.push(fontMesh)
+        //items.push(bgMesh)
+        items.push(fontMesh)
       })
     })
   }

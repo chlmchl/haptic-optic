@@ -194,7 +194,7 @@ async function init () {
 
   setTimeout(() => {
     let message = message1
-    loadTitle(camera, message)
+    // loadTitle(camera, message)
   }, 7000)
 
   // launch functions
@@ -393,8 +393,8 @@ function addInstancedMesh (scene, dataArr) {
         mesh.add(bgMesh)
         objects.push([mesh, bgMesh])
         items.push(mesh)
-        items.push(bgMesh)
-        //items.push(fontMesh)
+        //items.push(bgMesh)
+        items.push(fontMesh)
       })
     })
   }
