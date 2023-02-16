@@ -20,12 +20,12 @@ async function GetData() {
                 items.push(rowTitle)
 
                 //credits 
-                let rowAuthorNode = document.createTextNode(rowInfo[0] + " " + rowInfo[1])
+                let rowAuthorNode = document.createTextNode(rowInfo[0] + " " + rowInfo[1] )
                 let rowAuthor = rowAuthorNode.nodeValue
                 items.push(rowAuthor)
 
                 //date
-                let rowDateNode = document.createTextNode(rowInfo[3])
+                let rowDateNode = document.createTextNode(rowInfo[3] )
                 let rowDate = rowDateNode.nodeValue
                 items.push(rowDate)
 

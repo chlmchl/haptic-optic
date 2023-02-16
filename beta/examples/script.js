@@ -102,7 +102,7 @@ function getDevice () {
     d2 = 700
     zSpeed = 0.1
     pSpeed = 0.1
-    initialWidth = 10
+    initialWidth = 8
     initialDepth = 4000
   } else {
     // false for not mobile device
@@ -115,7 +115,7 @@ function getDevice () {
     d2 = 500
     zSpeed = 0.2
     pSpeed = 1
-    initialWidth = 6
+    initialWidth = 4
     initialDepth = 3000
   }
 }
@@ -277,7 +277,7 @@ function addInstancedMesh (scene, dataArr) {
       mesh.position.y =
         (Math.random() - 0.5) * window.innerHeight * initialWidth
       mesh.position.z = 1000 + (Math.random() - 0.5) * initialDepth
-      mesh.scale.x = mesh.scale.y = 0.85
+      mesh.scale.x = mesh.scale.y = 0.7
 
       scene.add(mesh)
 
@@ -285,11 +285,7 @@ function addInstancedMesh (scene, dataArr) {
       const font = new FontLoader()
 
       font.load('fonts/Grotesk/Grotesk03_Bold.json', function (font) {
-        let credits
-
-    
-       
-        
+        let credits        
         /* break dataArr[i][3] into a new line every 3 words */
 
         dataArr[i][1] = dataArr[i][1].split(' ')
@@ -297,7 +293,7 @@ function addInstancedMesh (scene, dataArr) {
         for (let j = 0; j < dataArr[i][1].length; j++) {
           line += dataArr[i][1][j] + ' '
 
-          if (j % 7 === 0 && dataArr[i][1].length > 7) {
+          if (j % 7 === 1 && dataArr[i][1].length > 7) {
             line += '\n'
           }
         }
@@ -307,17 +303,24 @@ function addInstancedMesh (scene, dataArr) {
           for (let j = 0; j < dataArr[i][4].length; j++) {
             line2 += dataArr[i][4][j] + ' '
             
-            if (j % 7 === 0 && dataArr[i][4].length > 7) {
+            if (j % 7 === 1 && dataArr[i][4].length > 7) {
               line2 += '\n'
             }
           }
-
+          //console.log(dataArr[i][2])
         
-        if(dataArr[i][2] === '\n' || dataArr[i][1] === '\n')
+        if(dataArr[i][2].length < 2)
         {  
-          credits =  line + ' ' + dataArr[i][3] + '' + line2
-        } else {
-          credits = dataArr[i][2] + line  + dataArr[i][3] + line2}
+          credits =  line + ' \n' + dataArr[i][3] + line2
+          console.log("wo")
+        } else if (dataArr[i][2].length <= 2 && dataArr[i][1].length <= 2){
+          credits =  dataArr[i][3] + line2 
+          console.log("w")}
+          else {
+            credits =  dataArr[i][2] + line + ' \n' + dataArr[i][3] + line2
+            console.log("dezdazé")
+          }
+          console.log(credits)
 
         //console.log(line)
 
