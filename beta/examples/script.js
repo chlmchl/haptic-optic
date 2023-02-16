@@ -187,7 +187,7 @@ async function init () {
   createControls(camera)
 
   const message1 = [
-    [') HAPTIC )( OPTIC (', title1],
+    [')) HAPTIC )( OPTIC ((', title1],
     ['Touching Collection', title2],
     ['2020/2022', title3]
   ]
@@ -290,36 +290,36 @@ function addInstancedMesh (scene, dataArr) {
         let credits        
         /* break dataArr[i][3] into a new line every 3 words */
 
-        dataArr[i][1] = dataArr[i][1].split(' ')
-        let line = ''
-        for (let j = 0; j < dataArr[i][1].length; j++) {
-          line += dataArr[i][1][j] + ' '
+        // dataArr[i][1] = dataArr[i][1].split(' ')
+        // let line = ''
+        // for (let j = 0; j < dataArr[i][1].length; j++) {
+        //   line += dataArr[i][1][j] + ' '
 
-          if (j % 7 === 1 && dataArr[i][1].length > 7) {
-            line += '\n'
-          }
-        }
+        //   if (j % 7 === 1 && dataArr[i][1].length > 10) {
+        //     line += '\n'
+        //   }
+        // }
 
-        dataArr[i][4] = dataArr[i][4].split(' ')
-          let line2 = ''
-          for (let j = 0; j < dataArr[i][4].length; j++) {
-            line2 += dataArr[i][4][j] + ' '
+        // dataArr[i][4] = dataArr[i][4].split(' ')
+        //   let line2 = ''
+        //   for (let j = 0; j < dataArr[i][4].length; j++) {
+        //     line2 += dataArr[i][4][j] + ' '
             
-            if (j % 7 === 1 && dataArr[i][4].length > 7) {
-              line2 += '\n'
-            }
-          }
+        //     if (j % 7 === 1 && dataArr[i][4].length > 10) {
+        //       line2 += '\n'
+        //     }
+        //   }
           //console.log(dataArr[i][2])
         
         if(dataArr[i][2].length < 2)
         {  
-          credits =  line + ' \n' + dataArr[i][3] + line2
+          credits =  dataArr[i][1] + ' \n' + dataArr[i][3] +  ' \n'+ dataArr[i][4]
           console.log("wo")
         } else if (dataArr[i][2].length <= 2 && dataArr[i][1].length <= 2){
-          credits =  dataArr[i][3] + line2 
+          credits =  dataArr[i][3] + dataArr[i][4] 
           console.log("w")}
           else {
-            credits =  dataArr[i][2] + '\n' + line + ' \n' + dataArr[i][3] + line2
+            credits =  dataArr[i][2] + '\n' + dataArr[i][1] + ' \n' + dataArr[i][3] + ' \n'+ dataArr[i][4]
             console.log("dezdazé")
           }
           console.log(credits)
@@ -376,9 +376,9 @@ function addInstancedMesh (scene, dataArr) {
         bgMesh.add(fontMesh)
         mesh.name = bgMesh.name = 'data[' + i + ']'
     
-        // fontMesh.layers.enable()
-        // bgMesh.layers.enable(1)
-        // mesh.layers.enable(1)
+        fontMesh.layers.enable()
+        bgMesh.layers.enable(1)
+        mesh.layers.enable(1)
         // addCredits.push(fontMesh)
         textCredit.push(bgMesh)
         //textCredit.push(fontMesh)
@@ -393,8 +393,8 @@ function addInstancedMesh (scene, dataArr) {
         mesh.add(bgMesh)
         objects.push([mesh, bgMesh])
         items.push(mesh)
-       // items.push(bgMesh)
-        items.push(fontMesh)
+        items.push(bgMesh)
+        //items.push(fontMesh)
       })
     })
   }
@@ -421,13 +421,13 @@ function onClick (event) {
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
 
       raycaster.setFromCamera(mouse, camera)
-      // raycaster.layers.set(1)
+      raycaster.layers.set(1)
      
 
       const intersections = raycaster.intersectObjects(items, true)
       const intersectionsCredits = raycaster.intersectObjects(textCredit, true)
       camRay.setFromCamera(ray, camera)
-      // camRay.layers.set(1)
+      camRay.layers.set(1)
 
       // calculate objects intersecting the picking ray
       const intersects = camRay.intersectObjects(items, true)
@@ -531,7 +531,7 @@ function checkCameraPos () {
 
 function test () {
   camRay.setFromCamera(ray, camera)
-  // camRay.layers.set(1)
+  camRay.layers.set(1)
   // calculate objects intersecting the picking ray
   const intersects = camRay.intersectObjects(items, true)
 
@@ -575,16 +575,11 @@ function addObjects () {
       camera.position.y + (Math.random() - 0.5) * window.innerHeight * 2,
       camera.position.z + (Math.random() - 0.5) * 10000
     )
-    // clonedObject.layers.enable(1)
     clonedObject.children[0].isMesh = false
-    // clonedObject.children[0].layers.enable(1)
     clonedObject.children[0].children[0].isMesh = false
-    // clonedObject.children[0].children[0].layers.enable(2)
     items.push(clonedObject)
     clonedObject.name = 'clonedData['
-    //get position of the cloned object in the array items
     const index = items.indexOf(clonedObject)
-    //add the cloned object and its text to the objects array
     objects.push([clonedObject, clonedObject.children[0]])
     //set the name of the cloned object and its text to clonedData[index]
     clonedObject.name = 'clonedData[' + index + ']'
