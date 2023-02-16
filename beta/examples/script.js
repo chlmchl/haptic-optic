@@ -194,7 +194,7 @@ async function init () {
   setTimeout(() => {
     let message = message1
     loadTitle(camera, message)
-  }, 7000)
+  }, 10000)
 
   // launch functions
 
