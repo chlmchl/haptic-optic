@@ -15,17 +15,17 @@ async function GetData() {
                 items.push(rowImage)
                 
                 //titles
-                let rowTitleNode = document.createTextNode(rowInfo[2] + "\n")
+                let rowTitleNode = document.createTextNode(rowInfo[2])
                 let rowTitle = rowTitleNode.nodeValue
                 items.push(rowTitle)
 
                 //credits 
-                let rowAuthorNode = document.createTextNode(rowInfo[0] + " " + rowInfo[1] + "\n")
+                let rowAuthorNode = document.createTextNode(rowInfo[0] + " " + rowInfo[1] )
                 let rowAuthor = rowAuthorNode.nodeValue
                 items.push(rowAuthor)
 
                 //date
-                let rowDateNode = document.createTextNode(rowInfo[3] + "\n")
+                let rowDateNode = document.createTextNode(rowInfo[3] )
                 let rowDate = rowDateNode.nodeValue
                 items.push(rowDate)
 
