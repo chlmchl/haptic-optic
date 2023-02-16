@@ -89,11 +89,10 @@ function getDevice () {
   if (
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent)
-
     )
    {
     // true for mobile device
-    console.log(window.clientInformation)
+    console.log("onMobile")
     onMobile = true
     title1 = 9
     title2 = 7
@@ -196,7 +195,6 @@ async function init () {
   setTimeout(() => {
     let message = message1
     loadTitle(camera, message)
-    title = false
   }, 5000)
 
   // launch functions
@@ -242,6 +240,7 @@ function loadTitle (camera, message) {
       text.isMesh = true
       setTimeout(() => {
         text.isMesh = false
+        title = false
       }, 5000)
     }
   }) //end load function
@@ -358,8 +357,6 @@ function addInstancedMesh (scene, dataArr) {
         )
 
         fontMesh.geometry.translate(xMid + 40, yMid - 60, 1)
-          
-          
         
         fontMesh.isMesh = false
         bgMesh.isMesh = false
@@ -371,6 +368,7 @@ function addInstancedMesh (scene, dataArr) {
         mesh.layers.enable(1)
         // addCredits.push(fontMesh)
         textCredit.push(bgMesh)
+        //textCredit.push(fontMesh)
         
         // const xMid =
         //   -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
@@ -382,7 +380,8 @@ function addInstancedMesh (scene, dataArr) {
         mesh.add(bgMesh)
         objects.push([mesh, bgMesh])
         items.push(mesh)
-        items.push(bgMesh)
+       // items.push(bgMesh)
+        items.push(fontMesh)
       })
     })
   }
@@ -429,11 +428,17 @@ function onClick (event) {
 
         if (onMobile === true) {
           if (intersects.length > 0 && intersects[0].distance < 1500) {
+            if(object.children[0].children[0] !== undefined) {
             object.children[0].isMesh = !object.children[0].isMesh
             object.children[0].children[0].isMesh = !object.children[0].children[0].isMesh
+          } else {
+              object.isMesh = !object.isMesh
+              object.children[0].isMesh = !object.children[0].isMesh
+            }
+           
           }
         }
-        console.log(count)
+        // console.log(count)
       }
 
       if (intersectionsCredits.length > 0) {
@@ -559,9 +564,11 @@ function addObjects () {
       camera.position.y + (Math.random() - 0.5) * window.innerHeight * 2,
       camera.position.z + (Math.random() - 0.5) * 10000
     )
-
+    clonedObject.layers.enable(1)
     clonedObject.children[0].isMesh = false
-    // clonedObject.children[0].children[0].isMesh = false
+    clonedObject.children[0].layers.enable(1)
+    clonedObject.children[0].children[0].isMesh = false
+    clonedObject.children[0].children[0].layers.enable(2)
     items.push(clonedObject)
     clonedObject.name = 'clonedData['
     //get position of the cloned object in the array items
