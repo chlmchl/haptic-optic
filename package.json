@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/chlmchl/themissingsense#readme",
   "dependencies": {
+    "acorn": "^8.8.2",
     "glsl-noise": "^0.0.0",
     "glslify": "^7.1.1"
   }
